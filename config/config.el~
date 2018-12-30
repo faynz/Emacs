@@ -1,0 +1,33 @@
+;; Comment file that you don't want in your config
+
+(load-config-file '(
+;;                    "ace-window.el"
+ 		    "avy.el"
+		    "c.el"
+;;		    "company.el"
+		    "dashboard.el"
+		    "elisp.el"
+;;		    "ggtags.el"
+		    "global.el"
+;;                    "helm.el"
+;;		    "hydra.el"
+		    "ivy.el"
+		    "icons.el"
+;;		    "js.el"
+                    "kill-ring.el"
+;;		    "magit.el"
+		    "org.el"
+		    "prog.el"
+;;		    "projectile.el"
+;;		    "semantic.el"
+;;		    "smex.el"
+		    "theme.el"
+		    "yasnippet.el"
+
+		    "lines.el"
+		    "neotree.el"
+		    "keybindings.el"
+
+		    
+		    )
+		  )
