@@ -17,7 +17,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;; Added ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 ;; General options
 ;;y for yes
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -47,7 +46,6 @@
 ;; Any existing default command will be overwritten
 
 ;; Colors buffer
-
 (global-set-key (kbd "C-c c") 'list-colors-display)
 
 ;;Navigate through words

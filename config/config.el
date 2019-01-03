@@ -13,6 +13,7 @@
 		    "ggtags.el"
 		    "global.el"
 		    "hydra.el"
+;;                  "ido.el"
 		    "ivy.el"
 		    "magit.el"
 		    "mc.el"
