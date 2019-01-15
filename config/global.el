@@ -26,18 +26,24 @@
 (column-number-mode t)
 (electric-pair-mode 1)
 (show-paren-mode)
-
-;;Enable the line numbers
-(global-linum-mode)
-
-;; hooks
 (display-time)
-(add-hook 'c++-mode-hook 'linum-mode)
-(add-hook 'c-mode-hook 'linum-mode)
-(add-hook 'org-mode-hook 'linum-mode)
-(add-hook 'emacs-lisp-mode-hook 'linum-mode)
-(add-hook 'text-mode-hook 'orgtbl-mode)
 
+;; Enable the line numbers
+;; Since Emacs 26, this is a lot better than global-linum-mode
+(global-display-line-numbers-mode)
+
+;; hooks needed if emacs version < 26
+;;(add-hook 'c++-mode-hook 'linum-mode)
+;;(add-hook 'c-mode-hook 'linum-mode)
+;; ;; (add-hook 'org-mode-hook 'linum-mode)
+;;(add-hook 'emacs-lisp-mode-hook 'linum-mode)
+;;(add-hook 'text-mode-hook 'orgtbl-mode)
+
+;; Adds many functionalities to dired mode (including <open all marked files>)
+
+(use-package diredful
+  :config
+  (diredful-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;; Keybindings ;;;;;;;;;;;;;;;;;;;;;;

@@ -60,9 +60,7 @@
  '(initial-scratch-message nil)
  '(line-number-mode nil)
  '(org-agenda-files nil)
- '(package-selected-packages
-   (quote
-    (doom-themes counsel ivy swiper all-the-icons rainbow-delimiters rainbow-identifiers doom-modeline monokai-theme yasnippet auto-complete neotree helm yasnippet-snippets avy evil evil-easymotion powerline darkokai-theme cl-lib multiple-cursors)))
+ '(package-selected-packages (quote (cl-lib)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(tooltip-mode nil))

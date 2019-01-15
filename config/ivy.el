@@ -70,8 +70,8 @@
 (use-package counsel
 
   :bind(
-        ("M-C-y" . counsel-yank-pop)
         ("M-x" . counsel-M-x)
+        ("M-C-y" . counsel-yank-pop)
         ("C-x C-f" . counsel-find-file)
         ("<f1> f" . counsel-describe-function)
         ("<f1> v" . counsel-describe-variable)

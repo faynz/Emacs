@@ -12,7 +12,7 @@
 
 ;; to use, comment dashboard in config.el
 
-(setq initial-buffer-choice "~/Documents/1010")
+(setq initial-buffer-choice "~/Documents/School")
 
 ;; No gnu buffer
 (setq inhibit-startup-screen t)
