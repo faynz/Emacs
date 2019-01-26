@@ -1,11 +1,11 @@
 ;; Shows all the whitespaces
 
-(use-package ws-butler
-  :hook
-  (prog-mode . (lambda () (setq show-trailing-whitespace 1)))
-  (prog-mode . (lambda () (ws-butler-mode 1)))
+;; (use-package ws-butler
+;;   :hook
+;;   (prog-mode . (lambda () (setq show-trailing-whitespace 1)))
+;;   (prog-mode . (lambda () (ws-butler-mode 1)))
 
-  )
+;;   )
 
 
 ;; Shows possible suffix keys

@@ -4,6 +4,11 @@
   :hook (prog-mode . rainbow-delimiters-mode)
   )
 
+;; Colors
+(set-face-foreground 'font-lock-comment-face "gray34")
+(set-foreground-color "#FFFFFF")
+(set-background-color "#1F1F25")
+(set-face-foreground 'font-lock-string-face "light pink")
 
 (use-package doom-themes
    :hook

@@ -64,3 +64,9 @@
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(tooltip-mode nil))
+
+;; colors (for Emax)
+(set-face-foreground 'font-lock-comment-face "gray34")
+(set-foreground-color "#FFFFFF")
+(set-background-color "#1F1F25")
+(set-face-foreground 'font-lock-string-face "light pink")
