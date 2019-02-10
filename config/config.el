@@ -9,6 +9,7 @@
 		    "c.el"
 		    "company.el"
 ;;		    "dashboard.el"
+                    "dired.el"
                     "eyebrowse.el"
 		    "ggtags.el"
 		    "global.el"

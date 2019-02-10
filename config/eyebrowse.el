@@ -7,7 +7,9 @@
             (define-key eyebrowse-mode-map (kbd "C-1") 'eyebrowse-switch-to-window-config-1)
             (define-key eyebrowse-mode-map (kbd "C-2") 'eyebrowse-switch-to-window-config-2)
             (define-key eyebrowse-mode-map (kbd "C-3") 'eyebrowse-switch-to-window-config-3)
-            (define-key eyebrowse-mode-map (kbd "C-4") 'eyebrowse-close-window-config)
+            (define-key eyebrowse-mode-map (kbd "C-4") 'eyebrowse-switch-to-window-config-4)
+            (define-key eyebrowse-mode-map (kbd "C-5") 'eyebrowse-switch-to-window-config-5)
+            (define-key eyebrowse-mode-map (kbd "C-6") 'eyebrowse-close-window-config)
 
             (eyebrowse-mode t)
             (setq eyebrowse-new-workspace t)

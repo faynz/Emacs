@@ -39,11 +39,6 @@
 ;;(add-hook 'emacs-lisp-mode-hook 'linum-mode)
 ;;(add-hook 'text-mode-hook 'orgtbl-mode)
 
-;; Adds many functionalities to dired mode (including <open all marked files>)
-
-(use-package diredful
-  :config
-  (diredful-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;; Keybindings ;;;;;;;;;;;;;;;;;;;;;;
