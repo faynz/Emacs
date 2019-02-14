@@ -68,7 +68,15 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
  '(line-number-mode nil)
  '(org-agenda-files nil)
- '(package-selected-packages (quote (cl-lib)))
+ '(org-emphasis-alist
+   (quote
+    (("/" italic)
+     ("_" underline)
+     ("=" org-verbatim verbatim)
+     ("~" org-code verbatim)
+     ("+"
+      (:strike-through t)))))
+ '(package-selected-packages (quote (centered-cursor-mode cl-lib)))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
@@ -104,3 +112,4 @@
 (put 'dired-find-alternate-file 'disabled nil)
 ;; highlight color
 (set-face-attribute 'region nil :background "#333344")
+

@@ -7,6 +7,7 @@
  		    "avy.el"
                     "buffers.el"
 		    "c.el"
+                    "centered-cursor.el"
 		    "company.el"
 ;;		    "dashboard.el"
                     "dired.el"

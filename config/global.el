@@ -47,14 +47,17 @@
 ;; Any existing default command will be overwritten
 
 ;; Colors buffer
-(global-set-key (kbd "C-c c") 'list-colors-display)
+(global-set-key (kbd "C-c l") 'list-colors-display)
+
+;; Better shortcut for DIndent
+;;(global-set-key (kbd "C-i") 'delete-horizontal-space)
 
 ;;Navigate through words
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "M-n") 'forward-paragraph)
 
-(global-set-key (kbd "C-M-h") 'backward-paragraph)
-(global-set-key (kbd "C-M-j") 'left-word)
-(global-set-key (kbd "C-M-k") 'right-word)
-(global-set-key (kbd "C-M-l") 'forward-paragraph)
+;; Better shortcut for query
+(global-set-key (kbd "M-q") 'query-replace-regexp)
 
 ;; Global Key
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -67,9 +70,11 @@
 (put 'downcase-region 'disabled nil)
 
 ;; Scroll down X lines
-(global-set-key (kbd "M-n") (lambda () (interactive) (scroll-up 4)))
-(global-set-key (kbd "M-p") (lambda () (interactive) (scroll-down 4)))
+(global-set-key (kbd "M-]") (lambda () (interactive) (scroll-up 4)))
+(global-set-key (kbd "M-[") (lambda () (interactive) (scroll-down 4)))
 
+;; Toggle centered-cursor mode 
+(global-set-key (kbd "M-\\") 'global-centered-cursor-mode)
 ;; -----------------------------------------------------
 
 ;; Disable Auto Save and Backup
