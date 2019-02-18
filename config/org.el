@@ -1,7 +1,11 @@
 (use-package org
-
+  :ensure t 
   :init
   (setq org-startup-folded nil)
+  :config
+  (add-to-list 'org-emphasis-alist
+             '("*" (:foreground "red"))
+             )
   )
 
 
@@ -30,9 +34,7 @@
 ;;      ("+" (:strike-through t))
 ;;      )))
 
-(add-to-list 'org-emphasis-alist
-             '("*" (:foreground "red"))
-             )
+
 
 
 

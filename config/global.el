@@ -50,7 +50,7 @@
 (global-set-key (kbd "C-c l") 'list-colors-display)
 
 ;; Better shortcut for DIndent
-;;(global-set-key (kbd "C-i") 'delete-horizontal-space)
+(global-set-key (kbd "M-i") 'delete-horizontal-space)
 
 ;;Navigate through words
 (global-set-key (kbd "M-p") 'backward-paragraph)

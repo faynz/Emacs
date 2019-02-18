@@ -60,6 +60,7 @@
  '(display-time-mode t)
  '(fci-rule-color "#6272a4")
  '(fringe-mode 0 nil (fringe))
+ '(global-centered-cursor-mode t)
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
  '(initial-scratch-message nil)
@@ -70,7 +71,9 @@
  '(org-agenda-files nil)
  '(org-emphasis-alist
    (quote
-    (("/" italic)
+    (("*"
+      (:foreground "red"))
+     ("/" italic)
      ("_" underline)
      ("=" org-verbatim verbatim)
      ("~" org-code verbatim)
