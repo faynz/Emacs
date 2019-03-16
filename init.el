@@ -60,7 +60,7 @@
  '(display-time-mode t)
  '(fci-rule-color "#6272a4")
  '(fringe-mode 0 nil (fringe))
- '(global-centered-cursor-mode t)
+ '(global-centered-cursor-mode nil)
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
  '(initial-scratch-message nil)
@@ -79,7 +79,7 @@
      ("~" org-code verbatim)
      ("+"
       (:strike-through t)))))
- '(package-selected-packages (quote (centered-cursor-mode cl-lib)))
+ '(package-selected-packages (quote (nasm-mode centered-cursor-mode cl-lib)))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
@@ -111,6 +111,7 @@
 (set-face-foreground 'font-lock-comment-face "gray34")
 (set-foreground-color "#FFFFFF")
 (set-background-color "#1F1F25")
+(add-to-list 'default-frame-alist '(background-color . "#1F1F25")) ;; No need to load file for background color 
 (set-face-foreground 'font-lock-string-face "light pink")
 (put 'dired-find-alternate-file 'disabled nil)
 ;; highlight color
