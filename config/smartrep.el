@@ -1,13 +1,13 @@
 ;; Setting new prefix key for multiple cursors
 
 (define-prefix-command 'mc)
-(global-set-key (kbd"C-z") 'mc)
+(global-set-key (kbd"M-z") 'mc)
 
 
 (use-package smartrep
   :config
   (smartrep-define-key
-   global-map "C-z"
+   global-map "M-z"
    '(
 
      ;; Multiple cursors

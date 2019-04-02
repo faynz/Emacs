@@ -7,25 +7,6 @@
   ;; Return key = new line & indent, instead of quit
   (define-key mc/keymap (kbd "<return>") nil)
   (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-  
-  ;;  Commented shortcuts defined in smartrep.el
-  ;;  :bind
-  
-  ;; ("M-<right>" . mc/mark-next-like-this)
-  ;; ("M-<left>" . mc/mark-previous-like-this)
-  ;; ("M-<up>" . mc/skip-to-previous-like-this)
-  ;; ("M-<down>" . mc/skip-to-next-like-this)
-
-  ;; ("M-;" . mc/unmark-previous-like-this)
-  ;; ("M-'" . mc/unmark-next-like-this)
-
-  ;; ("M-]" . mc/insert-letters)
-  ;; ("M-[" . mc/insert-numbers)
-  ;; ("M-{" . mc/mark-all-like-this)
-
-  ;; ;;puts cursors on previous mark
-  ;; ;; ("M-}" . mc/mark-pop )
-  ;; ("M-}" . mc/vertical-align )
 
   )
 

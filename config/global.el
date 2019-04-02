@@ -1,7 +1,4 @@
 
-(require 'subr-x)
-(require 'iso-transl)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;; Removed ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26,10 +23,10 @@
 (column-number-mode t)
 (electric-pair-mode 1)
 (show-paren-mode)
-(display-time)
+;;(display-time)
 
 ;; Enable the line numbers
-;; Since Emacs 26, this is a lot better than global-linum-mode
+;; Since Emacs 26, this is better than global-linum-mode
 (global-display-line-numbers-mode)
 
 ;; hooks needed if emacs version < 26
