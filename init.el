@@ -31,16 +31,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "MonacoB2" :foundry "pyrs" :slant normal :weight bold :height 143 :width normal))))
+ '(dired-directory ((t (:foreground "dark orange"))))
+ '(dired-header ((t (:inherit bold :background "#242728" :foreground "dark orange"))))
+ '(dired-mark ((t (:foreground "#63de5d" :weight bold))))
+ '(dired-marked ((t (:inherit bold :foreground "#ab7eff"))))
  '(doom-modeline-bar ((t (:background "#bd93f9"))))
+ '(ivy-current-match ((t (:background "yellow3" :foreground "black"))))
+ '(ivy-minibuffer-match-highlight ((t (:background "olive drab" :foreground "black"))))
  '(ivy-prompt-match ((t (:inherit ivy-current-match))))
+ '(line-number ((t (:background "#1F1F25" :foreground "#5D6365"))))
+ '(line-number-current-line ((t (:inherit line-number :foreground "white"))))
  '(mode-line ((t (:background "#1F1F25" :foreground "#f8fbfc" :box (:line-width 8 :color "#1F1F25" :style unspecified)))))
  '(mode-line-buffer-id ((t (:foreground "orange" :weight extra-bold))))
  '(mode-line-emphasis ((t (:foreground "light sea green"))))
  '(mode-line-highlight ((t (:foreground "yellow"))))
- '(mode-line-inactive ((t (:background "#1F1F25" :foreground "#6272a4" :box (:line-width 8 :color "#242728" :style unspecified)))))
- '(line-number ((t (:background "#1F1F25" :foreground "#5D6365"))))
- '(line-number-current-line ((t (:inherit line-number :foreground "white"))))
- )
+ '(mode-line-inactive ((t (:background "#1F1F25" :foreground "#6272a4" :box (:line-width 8 :color "#242728" :style unspecified))))))
 
 
  ;; custom-set-variables was added by Custom.
