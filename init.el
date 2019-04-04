@@ -31,7 +31,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "MonacoB2" :foundry "pyrs" :slant normal :weight bold :height 143 :width normal))))
- '(dired-directory ((t (:foreground "dark orange"))))
+ '(dired-directory ((t (:foreground "gold"))))
  '(dired-header ((t (:inherit bold :background "#242728" :foreground "dark orange"))))
  '(dired-mark ((t (:foreground "#63de5d" :weight bold))))
  '(dired-marked ((t (:inherit bold :foreground "#ab7eff"))))
