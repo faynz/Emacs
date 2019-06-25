@@ -36,6 +36,16 @@
 ;;(add-hook 'emacs-lisp-mode-hook 'linum-mode)
 ;;(add-hook 'text-mode-hook 'orgtbl-mode)
 
+;; Enable terminal directory opening 
+
+(defun gnome-terminal ()
+  "Lists the contents of the current directory."
+  (interactive)
+  (call-process "gnome-terminal" nil 0 nil))
+
+(global-set-key (kbd "C-x :") 'gnome-terminal)
+(global-set-key (kbd "C-c r") 'recompile)
+(global-set-key (kbd "C-c c") 'compile)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;; Keybindings ;;;;;;;;;;;;;;;;;;;;;;

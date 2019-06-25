@@ -1,24 +1,23 @@
-(require 'package)
-(setq package-enable-at-startup nil)
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
 
-;;ELPA MELPA
-(setq package-archives '(("gnu"   . "http://elpa.gnu.org/packages/")
-			 ("melpa" . "https://melpa.org/packages/")
-			 ("melpa-stable" . "https://stable.melpa.org/packages/")
-			 ("org"   . "https://orgmode.org/elpa/")))
 (package-initialize)
 
-;;installing use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(defun load-config-file (files)
+  (dolist (file files)
+    (load-file
+     (expand-file-name file (concat user-emacs-directory "config/"))
+     )
+    )
+  )
 
-;;; loading config file
-(when (file-readable-p "~/.emacs.d/config.org")
-  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; config.el contains all my packages to load
+;; package.el has all the melpa and defines use-package 
 
-;; COLORS
+(load-config-file '("package.el"))
+(load-config-file '("config.el"))
 
 
 ;; custom-set-faces was added by Custom.
@@ -142,5 +141,4 @@
 
 (add-to-list 'default-frame-alist '(background-color . "#000000"))
 (add-to-list 'default-frame-alist '(background-color . "#1F1F25"))
-
 

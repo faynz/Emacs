@@ -11,8 +11,11 @@
 
 (use-package org-bullets
   :config
+  (setq org-bullets-face-name (quote org-bullet-face))
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-)
+  (setq org-bullets-bullet-list '("" "" "" ""))
+  )
+
 
 ;; (eval-after-load 'org '(require 'org-pdfview))
 

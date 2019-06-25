@@ -9,7 +9,7 @@
 		    "c.el"
                     "centered-cursor.el"
 		    "company.el"
-;;		    "dashboard.el"
+		    "dashboard.el"
                     "dired.el"
                     "evil.el"
                     "eyebrowse.el"

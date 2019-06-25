@@ -1,0 +1,1089 @@
+* ace-window
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c a") 'ace-window)
+  )
+
+;; Enable Window Move (Switch buffers on Emacs)
+(windmove-default-keybindings)
+
+#+END_SRC
+* avy
+#+BEGIN_SRC emacs-lisp
+
+(use-package avy
+  :ensure t
+  :bind
+  ("<S-return>" . avy-goto-char-timer)
+  ("<C-return>" . avy-goto-line)
+  ("C-x y" . avy-copy-region)
+  ("C-x w" . avy-kill-region)
+
+  :config
+  (setq avy-timeout-seconds 3.0)
+  ;; Jump across different emacs buffers
+  (setq avy-all-windows 'all-frames)
+  )
+
+#+END_SRC
+* buffers
+#+BEGIN_SRC emacs-lisp
+
+;; Forces the messages to 0, and kills the *Messages* buffer - thus disabling it on startup.
+
+(setq initial-scratch-message "")
+(setq-default message-log-max nil)
+(when (get-buffer "*Messages*")
+(kill-buffer "*Messages*"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;; Initial buffer ;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; to use, comment dashboard in config.el
+;;(setq initial-buffer-choice "~/Documents/Poly")
+
+;; No gnu buffer
+(setq inhibit-startup-screen t)
+
+#+END_SRC
+* c
+#+BEGIN_SRC emacs-lisp
+(defun c-setup-comment ()
+  (setq comment-start "/*"
+	comment-end   "*/"
+	comment-multi-line t
+	comment-continue " *"
+	comment-padding 1
+	comment-style 'extra-line)
+  )
+
+
+(defun c-setup-style ()
+  (setq c-default-style "bsd"
+	c-basic-offset 8
+	tab-width 8))
+
+
+(defun c-setup ()
+  (c-setup-comment)
+  (c-setup-style)
+)
+
+(setq c-default-style "bsd"
+      c-basic-offset 8
+      tab-width 8)
+
+
+(add-hook 'c-mode-common-hook 'c-setup)
+(add-hook 'c-mode-hook 'c-setup)
+(add-hook 'c++-mode-common-hook 'c-setup)
+(add-hook 'c++-mode-hook 'c-setup)
+
+;; c-default styles : https://www.emacswiki.org/emacs/IndentingC
+
+;; Assembly config
+(defun my-asm-mode-hook ()
+  ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+  (local-unset-key (vector asm-comment-char))
+  ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+  (setq tab-always-indent (default-value 'tab-always-indent)))
+
+(add-hook 'asm-mode-hook #'my-asm-mode-hook)
+
+
+#+END_SRC
+* centered-cursor
+#+BEGIN_SRC emacs-lisp
+
+(use-package centered-cursor-mode
+  :ensure t
+  :config
+  (global-centered-cursor-mode 1)
+  (defcustom ccm-vpos-init '(round (window-text-height) 2)
+    "This is the screen line position where the cursor initially stays."
+    :group 'centered-cursor
+    :tag "Vertical cursor position"
+    :type '(choice (const :tag "Center" (round (window-text-height) 2))
+                   (const :tag "Golden ratio" (round (* 21 (window-text-height)) 34)) 
+                   (integer :tag "Lines from top" :value 10)))
+  (make-variable-buffer-local 'ccm-vpos-init)
+)
+
+#+END_SRC
+* company
+#+BEGIN_SRC emacs-lisp
+
+(use-package company-c-headers
+  :ensure t
+)
+(use-package company
+  :ensure t
+  :config
+  (setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.5)
+
+  :init
+  ;; Default Back Ends
+  (setq company-backends
+	'((company-files
+	   company-keywords
+	   company-capf
+	   company-yasnippet
+	   ))
+	)
+
+  )
+
+(add-hook 'after-init-hook 'global-company-mode)
+
+
+(with-eval-after-load 'company
+
+    (define-key company-active-map (kbd "M-n") nil )
+    (define-key company-active-map (kbd "M-p") nil )
+    (define-key company-active-map (kbd "C-n") #'company-select-next )
+    (define-key company-active-map (kbd "C-p") #'company-select-previous )
+
+    )
+
+(use-package company-irony
+  :ensure t 
+  :config
+  (require 'company)
+  (add-to-list 'company-backends 'company-irony))
+
+  (add-to-list
+   (make-local-variable 'company-backends)
+   '(company-gtags
+      company-semantic
+      company-c-headers
+      )
+   )
+
+(use-package irony
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  )
+
+#+END_SRC
+* dashboard
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+
+  :ensure t
+  :init
+  (setq initial-buffer-choice (lambda() (get-buffer "*dashboard*")))
+
+
+  ;; dashboard message
+  (setq dashboard-banner-logo-title (concat ". . . . ."))
+
+  ;; dashboard picture
+  (setq dashboard-startup-banner 2)
+  ;;(setq dashboard-startup-banner "~/Pictures/Wallpapers/dashboard.png")
+
+  ;; dashboard elements
+  (setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+  :config
+  (dashboard-setup-startup-hook)
+  ;; Why is m bound to bookmarks???
+  (dashboard-insert-shortcut "b" "Bookmarks:")
+  )
+
+#+END_SRC
+* dired
+#+BEGIN_SRC emacs-lisp
+
+;; Adds many functionalities to dired mode (including <open all marked files>)
+
+(use-package diredful
+  :ensure t
+  :config
+  (diredful-mode 1))
+
+ (defun dc/dired-mode-keys ()
+   "User defined keys for dired mode."
+   (interactive)
+   (local-set-key (kbd "K") 'dired-kill-subdir)
+   )
+(add-hook 'dired-mode-hook 'dc/dired-mode-keys)
+
+(add-hook 'dired-mode-hook
+      (lambda ()
+        (dired-hide-details-mode)
+        (dired-sort-toggle-or-edit)))
+
+#+END_SRC
+* elisp
+#+BEGIN_SRC emacs-lisp
+
+(defun elisp-setup-comment ()
+  (setq comment-start ";;"
+	comment-end ";;"
+	comment-multi-line t
+	comment-padding " "
+	comment-continue ";; "
+	comment-empty-lines t
+	comment-padding 1
+	comment-style 'extra-line)
+  )
+
+(defun elisp-setup ()
+  (elisp-setup-comment)
+  )
+
+(add-hook 'emacs-lisp-mode 'elisp-setup)
+
+#+END_SRC
+* evil
+#+BEGIN_SRC emacs-lisp
+
+(setq evil-want-C-u-scroll t)
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1)
+
+  ;;emacs state is i state
+  (setq evil-insert-state-map (make-sparse-keymap))
+  (define-key evil-insert-state-map (kbd "<escape>") 'evil-normal-state)
+  
+  (add-to-list 'evil-emacs-state-modes 'nav-mode)
+  ;; (add-hook 'nav-mode-hook 'evil-emacs-state-modes)
+  ;; (add-hook 'read-only-mode-hook 'evil-emacs-state-modes)
+
+  (evil-set-initial-state 'ibuffer-mode 'normal)
+  (evil-set-initial-state 'bookmark-bmenu-mode 'normal)
+  (evil-set-initial-state 'dired-mode 'emacs)
+  (evil-set-initial-state 'sunrise-mode 'emacs)
+  (evil-set-initial-state 'image-mode 'emacs)
+  (evil-set-initial-state 'pdf-view-mode 'emacs)
+
+  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+  (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+  (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+  (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+  (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
+
+
+  (use-package evil-easymotion
+    :after (evil)
+    :config
+    (evilem-default-keybindings "SPC")
+    )
+  
+  
+)
+
+#+END_SRC
+* eyebrowse
+#+BEGIN_SRC emacs-lisp
+
+;; Prefix key for eyebrowse options is : "C-c C-w"
+
+(use-package eyebrowse
+  :ensure t 
+  :diminish eyebrowse-mode
+  :config (progn
+            (define-key eyebrowse-mode-map (kbd "C-1") 'eyebrowse-switch-to-window-config-1)
+            (define-key eyebrowse-mode-map (kbd "C-2") 'eyebrowse-switch-to-window-config-2)
+            (define-key eyebrowse-mode-map (kbd "C-3") 'eyebrowse-switch-to-window-config-3)
+            (define-key eyebrowse-mode-map (kbd "C-4") 'eyebrowse-switch-to-window-config-4)
+            (define-key eyebrowse-mode-map (kbd "C-5") 'eyebrowse-switch-to-window-config-5)
+            (define-key eyebrowse-mode-map (kbd "C-6") 'eyebrowse-close-window-config)
+
+            (eyebrowse-mode t)
+            (setq eyebrowse-new-workspace t)
+            )
+  )
+
+#+END_SRC
+* ggtags
+#+BEGIN_SRC emacs-lisp
+
+;; Need Hydra
+(use-package ggtags
+  :ensure t 
+  :init
+  (use-package counsel-gtags
+
+    :hook
+    (
+     (c-mode-common . counsel-gtags-mode)
+     )
+
+    :bind
+    (
+     :map counsel-gtags-mode-map
+          ("M-." . counsel-gtags-dwim)
+          ("M-," . counsel-gtags-pop)
+          )
+    )
+)
+
+#+END_SRC
+* global
+#+BEGIN_SRC emacs-lisp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; Removed ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq-default indent-tabs-mode nil)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+;; Removes the annoying bell sound
+(setq ring-bell-function 'ignore)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;; Added ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; General options
+;;y for yes
+(fset 'yes-or-no-p 'y-or-n-p)
+
+
+(line-number-mode t)
+(column-number-mode t)
+(electric-pair-mode 1)
+(show-paren-mode)
+;;(display-time)
+
+;; Enable the line numbers
+;; Since Emacs 26, this is better than global-linum-mode
+(global-display-line-numbers-mode)
+
+;; hooks needed if emacs version < 26
+;;(add-hook 'c++-mode-hook 'linum-mode)
+;;(add-hook 'c-mode-hook 'linum-mode)
+;; ;; (add-hook 'org-mode-hook 'linum-mode)
+;;(add-hook 'emacs-lisp-mode-hook 'linum-mode)
+;;(add-hook 'text-mode-hook 'orgtbl-mode)
+
+;; Enable terminal directory opening 
+
+(defun gnome-terminal ()
+  "Lists the contents of the current directory."
+  (interactive)
+  (call-process "gnome-terminal" nil 0 nil))
+
+(global-set-key (kbd "C-x :") 'gnome-terminal)
+(global-set-key (kbd "C-c r") 'recompile)
+(global-set-key (kbd "C-c c") 'compile)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; Keybindings ;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Any existing default command will be overwritten
+
+;; Colors buffer
+(global-set-key (kbd "C-c l") 'list-colors-display)
+
+;; Better shortcut for DIndent
+(global-set-key (kbd "M-i") 'delete-horizontal-space)
+
+;;Navigate through words
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+
+;; Better shortcut for query
+(global-set-key (kbd "M-q") 'query-replace-regexp)
+
+;; Global Key
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+(global-set-key (kbd "C-x ;") 'comment-region)
+(global-set-key (kbd "C-x '") 'uncomment-region)
+
+;;Selected region to upcase (C-x C-u), downcase (C-x C-l)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+;; Scroll down X lines
+(global-set-key (kbd "M-]") (lambda () (interactive) (scroll-up 4)))
+(global-set-key (kbd "M-[") (lambda () (interactive) (scroll-down 4)))
+
+;; Toggle centered-cursor mode 
+(global-set-key (kbd "M-\\") 'global-centered-cursor-mode)
+;; -----------------------------------------------------
+
+;; Disable Auto Save and Backup
+;; Maybe selecting a place for dumb files instead?
+(setq auto-save-default nil)
+(setq make-backup-files nil)
+(setq create-lockfiles nil)
+(setq backup-directory-alist `(("." . "~/.saves")))
+
+
+;; Encoding
+(prefer-coding-system 'utf-8-unix)
+(set-default-coding-systems 'utf-8-unix)
+(set-terminal-coding-system 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8-unix)
+(set-selection-coding-system 'utf-8-unix)
+(setq-default buffer-file-coding-system 'utf-8-unix)
+
+
+;; Functions (?)
+(defun insert-and-comment (text)
+  (interactive)
+  (let ((begin (point)))
+    (insert text)
+    (comment-region begin (point))
+    (indent-region begin (point))
+    )
+  )
+
+#+END_SRC
+* hydra
+#+BEGIN_SRC emacs-lisp
+
+(use-package hydra
+  :ensure t
+  :config
+
+  (defhydra hydra-zoom (global-map "<f2>")
+    "zoom"
+    ("g" text-scale-increase "in")
+    ("l" text-scale-decrease "out"))
+
+  )
+
+(use-package ivy-hydra
+  :after (ivy hydra)
+  :ensure t 
+
+  :bind
+  ("C-c w" . hydra-window/body)
+  ("C-c p" . hydra-projectile/body)
+  ("C-c g" . hydra-gtags/body)
+
+  :config
+  (defhydra hydra-window (:color amaranth)
+    "
+Hydra Window
+^Size^                    ^Actions^            ^Split^
+^^^^^^^------------------------------------------------------------
+_e_nlarge Horizontally    _d_elete             _v_ertically
+_E_nlarge Vertically      _D_elete Others      _h_orizontally
+_s_hrink Horizontally     _o_: Other
+_S_hrink Vertically
+_M_aximize
+_m_inimize
+_b_alance
+"
+    ("v" split-window-vertically)
+    ("h" split-window-horizontally)
+    ("e" enlarge-window-horizontally)
+    ("E" enlarge-window)
+    ("s" shrink-window-horizontally)
+    ("S" shrink-window)
+    ("M" maxize-window)
+    ("m" minimize-window)
+    ("b" balance-windows)
+    ("d" delete-window)
+    ("D" delete-other-windows)
+    ("o" other-window)
+    ("q" nil "quit" :blue t))
+
+  (defhydra hydra-projectile (:color teal)
+    "
+Hydra Projectile
+^Find^        ^Actions^      ^Buffer
+p^^^^^--------------------------------------
+_p_roject     _g_rep         _k_ill
+_f_ile        _G_it
+_d_ir         _c_ompile
+_t_ag         _r_eplace
+_o_ther       _R_egex
+^ ^           _s_hell
+"
+    ("p" counsel-projectile-switch-project)
+    ("f" counsel-projectile-find-file)
+    ("d" counsel-projectile-find-dir)
+    ("t" projectile-find-tag)
+    ("o" projectile-find-other-file)
+    ("g" counsel-projectile-grep)
+    ("G" counsel-projectile-git-grep)
+    ("c" projectile-compile-project)
+    ("r" projectile-replace)
+    ("R" projectile-replace-regexp)
+    ("s" projectile-run-shell)
+    ("k" projectile-kill-buffers)
+    ("q" nil "quit")
+    )
+
+
+  (defhydra hydra-gtags (:color amaranth)
+    "
+Hydra Gtags
+^Search^        ^Tags^     ^Goto^
+^^^^^^^------------------------------------------------------------
+_d_efinitions   _c_reate   _p_op
+_r_eference     _u_ptade
+_s_ymbols
+_f_iles
+_D_wim
+"
+
+    ("d" counsel-gtags-find-definition)
+    ("r" counsel-gtags-find-reference)
+    ("s" counsel-gtags-find-symbol)
+    ("f" counsel-gtags-find-file)
+    ("D" counsel-gtags-dwim)
+    ;; There's a bug in counsel-gtags. Use pop instead
+;;    ("b" counsel-gtags-go-backward)
+    ;;    ("f" counsel-gtags-go-forward)
+    ("p" counsel-gtags-pop)
+    ("c" counsel-gtags-create-tags)
+    ("u" counsel-gtags-update-tags)
+    ("q" nil "quit" :blue t)
+    )
+
+
+)
+
+#+END_SRC
+* ivy
+#+BEGIN_SRC emacs-lisp
+
+(defun ivy-view-backtrace ()
+  (interactive)
+  (switch-to-buffer "*ivy-backtrace*")
+  (delete-region (point-min) (point-max))
+  (fundamental-mode)
+  (insert ivy-old-backtrace)
+  (goto-char (point-min))
+  (forward-line 1)
+  (let (part parts)
+    (while (< (point) (point-max))
+      (condition-case nil
+          (progn
+            (setq part (read (current-buffer)))
+            (push part parts)
+            (delete-region (point-min) (point)))
+        (error
+         (progn
+           (ignore-errors (up-list))
+           (delete-region (point-min) (point)))))))
+  (goto-char (point-min))
+  (dolist (part parts)
+    (lispy--insert part)
+    (lispy-alt-multiline)
+    (insert "\n")))
+
+ (defmacro csetq (variable value)
+   `(funcall (or (get ',variable 'custom-set)
+                 'set-default)
+             ',variable ,value))
+
+
+;; ivy/swiper
+
+(use-package ivy
+  :ensure t 
+  :bind(
+	("C-s" . swiper)
+	("C-c C-r" . ivy-resume)
+
+	:map ivy-minibuffer-map
+	("M-<return>" . ivy-alt-done)
+	("C-M-h" . ivy-previous-line-and-call)
+	("C-c o" . ivy-occur)
+
+	:map ivy-switch-buffer-map
+	("C-k" . ivy-switch-buffer-kill)
+	)
+
+  :init
+  (csetq ivy-display-style 'fancy)
+  ;; (csetq ivy-count-format "(%d/%d) ")
+  (csetq ivy-use-virtual-buffers t)
+  (csetq counsel-find-file-ignore-regexp "\\`\\.")
+
+  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-switch-buffer-faces-alist
+	'((emacs-lisp-mode . swiper-match-face-1)
+          (dired-mode . ivy-subdir)
+          (org-mode . org-level-4)))
+
+   (setq ivy-re-builders-alist
+   	 '((t . ivy--regex-ignore-order)))
+
+   :config
+   (ivy-mode 1)
+  )
+
+
+;; counsel
+
+(use-package counsel
+  :ensure t
+  :bind(
+        ("M-x" . counsel-M-x)
+        ("M-C-y" . counsel-yank-pop)
+        ("C-x C-f" . counsel-find-file)
+        ("<f1> f" . counsel-describe-function)
+        ("<f1> v" . counsel-describe-variable)
+        ("<f1> l" . counsel-find-library)
+        ("<f1> i" . counsel-info-lookup-symbol)
+        ("<f1> u" . counsel-unicode-char)
+;;  ("C-c g" . counsel-git)
+;;  ("C-c j" . counsel-git-grep)
+;;  ("C-c k" . counsel-ag)
+;;  ("C-x l" . counsel-locate)
+;;  ("C-S-o" . counsel-rhythmbox)
+
+  :map read-expression-map
+  ("C-r" . counsel-expression-history)
+  ("C-r" . counsel-minibuffer-history)
+  )
+
+  :init
+  (setq counsel-grep-base-command "grep -niE %s %s")
+  (setq counsel-grep-base-command
+	"rg -i -M 120 --no-heading --line-number --color never %s %s")
+  (setq counsel-rg-base-command
+	"rg -i -M 120 --no-heading --line-number --color never %s .")
+
+  (setq counsel-git-grep-cmd-default
+	(concat "git --no-pager grep --full-name -n --no-color -i -e '%s' -- './*' "
+		(mapconcat (lambda (x) (format "':!*.%s'" x))
+                           '("htm" "so" "a" "TTC" "NDS" "png" "md5") " ")))
+  (setq counsel-fzf-dir-function
+	(lambda ()
+          (let ((d (locate-dominating-file default-directory ".git")))
+            (if (or (null d)
+                    (equal (expand-file-name d)
+                           (expand-file-name "~/")))
+		default-directory
+	      d))))
+
+;;   (setq counsel-linux-apps-directories
+;; 	'("/usr/local/share/applications/"
+;;           "/usr/share/applications/"))
+
+  :config
+  (ivy-set-display-transformer 'counsel-describe-function nil)
+  )
+
+#+END_SRC
+* keyswap
+#+BEGIN_SRC emacs-lisp
+
+;; swap ctrls maj
+;;(start-process-shell-command  "setxkbmap -option ctrl:nocaps" nil "setxkbmap -option ctrl:nocaps")
+;;(start-process-shell-command  "xmodmap -e 'keycode 37=Caps_Lock'" nil "xmodmap -e 'keycode 37=Caps_Lock'")
+;;(start-process-shell-command  "setxkbmap -option ctrl:swapcaps" nil "setxkbmap -option ctrl:swapcaps")
+
+#+END_SRC
+* magit
+#+BEGIN_SRC emacs-lisp
+
+(use-package magit
+
+  :ensure t
+
+  :bind
+  ("C-c m" . magit-status)
+
+  :config
+  (global-magit-file-mode)
+)
+
+#+END_SRC
+* mc
+#+BEGIN_SRC emacs-lisp
+;; Multiple cursors
+;; Shortcuts are defined using smart-repeat!
+
+(use-package multiple-cursors
+  :ensure t
+  :config
+  
+  ;; Return key = new line & indent, instead of quit
+  (define-key mc/keymap (kbd "<return>") nil)
+  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+
+  )
+
+(use-package expand-region
+  :ensure t
+  )
+
+;;Move Lines Function
+;; (Exchange line positions)
+
+(defun move-line (n)
+  "Move the current line up or down by N lines."
+  (interactive "p")
+  (setq col (current-column))
+  (beginning-of-line) (setq start (point))
+  (end-of-line) (forward-char) (setq end (point))
+  (let ((line-text (delete-and-extract-region start end)))
+    (forward-line n)
+    (insert line-text)
+    ;; restore point to original column in moved line
+    (forward-line -1)
+    (forward-char col)))
+
+(defun move-line-up (n)
+  "Move the current line up by N lines."
+  (interactive "p")
+  (move-line (if (null n) -1 (- n))))
+
+(defun move-line-down (n)
+  "Move the current line down by N lines."
+  (interactive "p")
+  (move-line (if (null n) 1 n)))
+
+(global-set-key (kbd "M-S-<up>") 'move-line-up)
+(global-set-key (kbd "M-S-<down>") 'move-line-down)
+
+;;Move paragraphs
+(defun move-text-internal (arg)
+  (cond
+   ((and mark-active transient-mark-mode)
+    (if (> (point) (mark))
+        (exchange-point-and-mark))
+    (let ((column (current-column))
+          (text (delete-and-extract-region (point) (mark))))
+      (forward-line arg)
+      (move-to-column column t)
+      (set-mark (point))
+      (insert text)
+      (exchange-point-and-mark)
+      (setq deactivate-mark nil)))
+   (t
+    (beginning-of-line)
+    (when (or (> arg 0) (not (bobp)))
+      (forward-line)
+      (when (or (< arg 0) (not (eobp)))
+        (transpose-lines arg))
+      (forward-line -1)))))
+
+(defun move-text-down (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines down."
+  (interactive "*p")
+  (move-text-internal arg))
+
+(defun move-text-up (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines up."
+  (interactive "*p")
+  (move-text-internal (- arg)))
+
+(global-set-key [\M-\S-up] 'move-text-up)
+(global-set-key [\M-\S-down] 'move-text-down)
+
+#+END_SRC
+* modeline
+#+BEGIN_SRC emacs-lisp
+
+;; Modeline appearance
+
+(use-package doom-modeline
+  :ensure t
+  :defer t
+  :hook (after-init . doom-modeline-mode)
+  ;;:config
+  ;; How tall the mode-line should be (only respected in GUI Emacs).
+  ;;(setq doom-modeline-height 25)
+  
+  ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+  ;;(setq doom-modeline-bar-width 3)
+  
+  ;; Determines the style used by `doom-modeline-buffer-file-name'.
+  ;; If you are expereicing the laggy issue, especially while editing remote files
+  ;; with tramp, please use `file-name', `truncate-all' or `truncate-upto-root'
+  ;; style.
+  ;; Please refer to https://github.com/bbatsov/projectile/issues/657.
+  ;; (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
+  
+  ;; What executable of Python will be used (if nil nothing will be showed).
+  ;;(setq doom-modeline-python-executable "python")
+  
+  ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+  ;; The icons may not be showed correctly on Windows. Disable to make it work.
+  ;;(setq doom-modeline-icon t)
+  
+  ;; Don’t compact font caches during GC.
+  ;; If you are expereicing the laggy issue especially on Windows, please set to
+  ;; non-nil.
+  ;;(setq inhibit-compacting-font-caches t)
+  
+  )
+
+;; Removes the mode display on modeline
+
+(use-package diminish
+  :ensure t
+  :init
+  (diminish 'undo-tree-mode)
+  (diminish 'ivy-mode)
+  (diminish 'company-mode)
+  (diminish 'ggtags-mode)
+  (diminish 'counsel-gtags-mode)
+  (diminish 'abbrev-mode)
+  (diminish 'irony-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'projectile-mode))
+
+
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;   (require 'spaceline-config)
+;;   (setq powerline-default-separator (quote arrow))
+;;   (spaceline-spacemacs-theme))
+;;   (display-time-mode -1)
+
+#+END_SRC
+* neotree
+#+BEGIN_SRC emacs-lisp
+
+(use-package neotree
+  :ensure t 
+  :bind
+  ("C-`" . neotree-toggle)
+
+  :config
+
+  (setq neo-smart-open t)
+  (setq neo-theme 'ascii)
+
+
+  )
+
+#+END_SRC
+* open-with
+#+BEGIN_SRC emacs-lisp
+
+(use-package openwith
+  :ensure t
+  :config
+  (openwith-mode t)
+(setq openwith-associations '(("\\.pdf\\'" "zathura" (file)))))
+
+#+END_SRC
+* org
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :ensure t 
+  :init
+  ;; Open or close all tabs when opening an org file 
+  ;; (setq org-startup-folded nil)
+
+  :config
+  (add-to-list 'org-emphasis-alist
+             '("*" (:foreground "red"))
+             )
+  )
+
+
+(use-package org-bullets
+  :ensure t
+  :config
+  (setq org-bullets-face-name (quote org-bullet-face))
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (setq org-bullets-bullet-list '("" "" "" ""))
+  )
+
+
+;; (eval-after-load 'org '(require 'org-pdfview))
+
+(add-to-list 'org-file-apps
+             '("\\.pdf\\'" . (lambda (file link)
+                                     (org-pdfview-open link))))
+
+
+;; '(org-emphasis-alist
+;;    (quote
+;;     (
+;;      ("!" org-habit-overdue-face)
+;;      ("%" org-habit-alert-face)
+;;      ("*" bold)
+;;      ("/" italic)
+;;      ("_" underline)
+;;      ("=" org-verbatim verbatim)
+;;      ("~" org-code verbatim)
+;;      ("+" (:strike-through t))
+;;      )))
+
+#+END_SRC
+* pdf
+#+BEGIN_SRC emacs-lisp
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install)
+  )
+
+(use-package org-pdfview
+ :ensure t)
+
+#+END_SRC
+* whitespaces
+
+#+BEGIN_SRC emacs-lisp
+;; Shows all the whitespaces
+
+;; (use-package ws-butler
+;;   :ensure t
+;;   :hook
+;;   (prog-mode . (lambda () (setq show-trailing-whitespace 1)))
+;;   (prog-mode . (lambda () (ws-butler-mode 1)))
+
+;;   )
+
+#+END_SRC
+* whichkey
+#+BEGIN_SRC emacs-lisp
+
+;; Shows possible suffix keys
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode)
+  )
+
+#+END_SRC
+* projectile
+#+BEGIN_SRC emacs-lisp
+
+(use-package projectile
+  :ensure t
+  :init
+  (use-package counsel-projectile
+    :ensure t
+    :init
+    (setq projectile-completion-system 'ivy)
+    )
+
+  :config
+  (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
+  (counsel-projectile-mode)
+  )
+
+#+END_SRC
+* smartrep
+#+BEGIN_SRC emacs-lisp
+
+;; Setting new prefix key for multiple cursors
+
+(define-prefix-command 'mc)
+(global-set-key (kbd"M-z") 'mc)
+
+
+(use-package smartrep
+  :ensure t
+  :config
+  (smartrep-define-key
+   global-map "M-z"
+   '(
+
+     ;; Multiple cursors
+
+     ("h" . mc/skip-to-previous-like-this)
+     ("j" . mc/mark-previous-like-this)
+     ("k" . mc/mark-next-like-this)
+     ("l" . mc/skip-to-next-like-this)
+
+     ("u" . mc/unmark-previous-like-this)
+     ("i" . mc/unmark-next-like-this)
+
+     ("b" . mc/insert-letters)
+     ("n" . mc/insert-numbers)
+
+     ("m" . mc/mark-all-like-this)
+     ("e" . mc/edit-lines)
+
+     ("o" . mc/mark-pop )
+     ("a" . mc/vertical-align )
+
+     ("y" . er/expand-region )
+     ))
+  )
+
+#+END_SRC
+* theme
+#+BEGIN_SRC emacs-lisp
+;; Colors for all types of delimiters
+
+(use-package rainbow-delimiters
+  :ensure t 
+  :hook (prog-mode . rainbow-delimiters-mode)
+  )
+
+(use-package doom-themes
+  :ensure t 
+  :hook 
+  (after-init . (lambda () (load-theme 'darkokai))) 
+
+   :config
+
+   
+   ;; Colors (Put in init.el for Emax)
+   (set-face-foreground 'font-lock-comment-face "gray34")
+   (set-foreground-color "#FFFFFF")
+   (set-background-color "#1F1F25")
+   ;;(set-face-foreground 'font-lock-string-face "light pink")
+   
+
+
+    ;; If using evil mode, use this :
+    (setq evil-insert-state-cursor '(box "#F92672")
+	  evil-normal-state-cursor '(box "yellow2"))
+    
+    (blink-cursor-mode 0)
+
+    )
+
+#+END_SRC
+* undo-tree
+#+BEGIN_SRC emacs-lisp
+
+;; Redo is "C-?"
+(use-package undo-tree
+  :ensure t
+
+  :init
+  (global-undo-tree-mode)
+
+  )
+
+#+END_SRC
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+  )
+
+(use-package yasnippet-snippets
+  :ensure t
+)
+
+#+END_SRC

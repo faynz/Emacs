@@ -9,7 +9,8 @@
   (setq dashboard-banner-logo-title (concat ". . . . ."))
 
   ;; dashboard picture
-  (setq dashboard-startup-banner "~/Pictures/dashboard.png")
+  (setq dashboard-startup-banner 2)
+  ;;(setq dashboard-startup-banner "~/Pictures/Wallpapers/dashboard.png")
 
   ;; dashboard elements
   (setq dashboard-items '((recents  . 5)
