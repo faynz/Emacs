@@ -21,3 +21,4 @@
 ;;(add-to-list 'default-frame-alist '(background-color . "#1F1F25"))
 
 
+(put 'dired-find-alternate-file 'disabled nil)
