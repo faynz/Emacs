@@ -28,105 +28,6 @@
  (setq inhibit-startup-screen t)
 
  #+END_SRC
-* Esthetics
-** theme
- #+BEGIN_SRC emacs-lisp
-
-  (use-package dracula-theme
-    :ensure t
-    :init
-    (load-theme 'dracula t))
-
-  (use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
-  ;; Set default font
-
-  (set-face-attribute 'default nil
-		       :family "Monaco Nerd Font"
-		       :foundry "PfEd"
-		       :height 150
-		       :weight 'bold
-		       :width 'normal)
-
-  ;; colorsssss
-  (if (display-graphic-p)
-      (setq initial-frame-alist
-	     '(
-	       (tool-bar-lines . 0)
-	       (width . 106)
-	       (height . 60)
-	       (background-color . "#101010")
-	       (left . 50)
-	       (top . 50)))
-    (setq initial-frame-alist '( (tool-bar-lines . 0))))
-  (setq default-frame-alist initial-frame-alist)
-
-  (add-to-list 'default-frame-alist '(background-color . "#101010"))
-  (set-foreground-color "#ffffff")
-
-  (set-face-foreground 'font-lock-comment-face "gray34")
-  (set-face-foreground 'font-lock-doc-face
-		        (face-foreground font-lock-comment-face))
-  (set-face-attribute 'region nil :background "#555566")
-
-
-  (global-hl-line-mode t)
-  (set-face-background 'hl-line "#181f1f")
-  (set-face-foreground 'highlight nil)
-
-  ;;Cursor
-  (setq evil-insert-state-cursor '(box "Red")
-	 evil-normal-state-cursor '(box "MediumPurple1"))
-  (blink-cursor-mode 0)
-
-  ;; bars
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  ;; fringe like "padding"
-  (set-fringe-mode 25)
-  (set-face-attribute 'fringe nil :background "#101010" :foreground "#101010")
-
-  ;; DEFAULT FORMAT
-  (defun mode-line-fill (face reserve)
-    "Return empty space using FACE and leaving RESERVE space on the right."
-    (when
-      (and window-system (eq 'right (get-scroll-bar-mode)))
-      (setq reserve (- reserve 3)))
-    (propertize " "
-      'display
-      `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
-      'face face
-      )
-    )
-
-  (setq-default mode-line-format
-		 (list
-		  '(:eval (propertize "%b" 'face '(:weight bold)))
-		  '(:eval (if (buffer-modified-p)
-			      (propertize "  " 'face '(:foreground "#f92672"))
-			    (propertize "  " 'face '(:foreground "#bd93f9"))))
-		  '(:eval (propertize "%m" 'face '(:weight bold)))
-		  '(:eval (mode-line-fill 'mode-line 9))
-		  '(:eval (propertize "  " 'face '(:foreground "#bd93f9")))
-		  '(:eval (propertize "%l" 'face '(:weight bold)))))
-  (setq frame-title-format '(("[%b]\n\n")minor-mode-alist))
-
-  (set-face-background
-   'mode-line "#101010")
-  (set-face-foreground 'mode-line "#ffffff")
-  (custom-set-faces
-   '(mode-line ((t (:box (:line-width 1 :color "#101010")))))
-   '(mode-line-inactive ((t (:background "#101010" :foreground "#444455" :box (:line-width 1 :color "#101010" :style unspecified)))))
-   '(header-line ((t (:background "#101010" :weight bold))))
-   )
-  ;; (set-frame-parameter nil 'internal-border-width 10)
-
-  ;; no modeline
-  ;; (setq-default mode-line-format nil)
-
- #+END_SRC
 * General
 ** smartrep
  #+BEGIN_SRC emacs-lisp
@@ -432,87 +333,90 @@
 ** global
  #+BEGIN_SRC emacs-lisp
 
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;;;;;;;;;;;;;;;;;;;;;;;; Removed ;;;;;;;;;;;;;;;;;;;;;;;;
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;; Removed ;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
- (setq-default indent-tabs-mode nil)
- (menu-bar-mode -1)
- (scroll-bar-mode -1)
- (tool-bar-mode -1)
- ;; Removes the annoying bell sound
- (setq ring-bell-function 'ignore)
+   (setq-default indent-tabs-mode nil)
+   (menu-bar-mode -1)
+   (scroll-bar-mode -1)
+   (tool-bar-mode -1)
+   ;; Removes the annoying bell sound
+   (setq ring-bell-function 'ignore)
 
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;;;;;;;;;;;;;;;;;;;;;;;;; Added ;;;;;;;;;;;;;;;;;;;;;;;;;
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;; Added ;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
- ;; General options
- ;;y for yes
- (fset 'yes-or-no-p 'y-or-n-p)
+   ;; General options
+   ;;y for yes
+   (fset 'yes-or-no-p 'y-or-n-p)
 
- 
- (line-number-mode t)
- (show-paren-mode)
 
- ;; Enable the line numbers
- ;; Since Emacs 26, this is better than global-linum-mode
- (global-display-line-numbers-mode)
+   (line-number-mode t)
+   (show-paren-mode)
 
- ;; Enable terminal directory opening 
+   ;; Enable the line numbers
+   ;; Since Emacs 26, this is better than global-linum-mode
+   (global-display-line-numbers-mode)
 
- (defun gnome-terminal ()
-   "Lists the contents of the current directory."
-   (interactive)
-   (call-process "gnome-terminal" nil 0 nil))
+   ;; Enable terminal directory opening 
 
- (global-set-key (kbd "C-x :") 'gnome-terminal)
- (global-set-key (kbd "C-c r") 'recompile)
- (global-set-key (kbd "C-c c") 'compile)
+   (defun gnome-terminal ()
+     "Lists the contents of the current directory."
+     (interactive)
+     (call-process "gnome-terminal" nil 0 nil))
 
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;;;;;;;;;;;;;;;;;;;;;; Keybindings ;;;;;;;;;;;;;;;;;;;;;;
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   (global-set-key (kbd "C-x :") 'gnome-terminal)
+   (global-set-key (kbd "C-c r") 'recompile)
+   (global-set-key (kbd "C-c c") 'compile)
 
- ;; Any existing default command will be overwritten
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;; Keybindings ;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
- ;; Colors buffer
- (global-set-key (kbd "C-c y") 'list-colors-display)
+   ;; Any existing default command will be overwritten
 
- ;; Better shortcut for DIndent
- (global-set-key (kbd "M-i") 'delete-horizontal-space)
+   ;; replace by ibuffer 
+   (global-set-key (kbd "C-x C-b") 'ibuffer)
 
- ;;Navigate through words
- (global-set-key (kbd "M-p") 'backward-paragraph)
- (global-set-key (kbd "M-n") 'forward-paragraph)
+   ;; Colors buffer
+   (global-set-key (kbd "C-c y") 'list-colors-display)
 
- ;; Better shortcut for query
- (global-set-key (kbd "M-q") 'query-replace-regexp)
+   ;; Better shortcut for DIndent
+   (global-set-key (kbd "M-i") 'delete-horizontal-space)
 
- ;; Global Key
- (global-set-key (kbd "RET") 'newline-and-indent)
+   ;;Navigate through words
+   (global-set-key (kbd "M-p") 'backward-paragraph)
+   (global-set-key (kbd "M-n") 'forward-paragraph)
 
- (global-set-key (kbd "C-x ;") 'comment-region)
- (global-set-key (kbd "C-x '") 'uncomment-region)
+   ;; Better shortcut for query
+   (global-set-key (kbd "M-q") 'query-replace-regexp)
 
- ;;Selected region to upcase (C-x C-u), downcase (C-x C-l)
- (put 'upcase-region 'disabled nil)
- (put 'downcase-region 'disabled nil)
+   ;; Global Key
+   (global-set-key (kbd "RET") 'newline-and-indent)
 
- ;; Scroll down X lines
- (global-set-key (kbd "M-]") (lambda () (interactive) (scroll-up 4)))
- (global-set-key (kbd "M-[") (lambda () (interactive) (scroll-down 4)))
+   (global-set-key (kbd "C-x ;") 'comment-region)
+   (global-set-key (kbd "C-x '") 'uncomment-region)
 
- ;; Toggle centered-cursor mode 
- (global-set-key (kbd "M-\\") 'global-centered-cursor-mode)
- ;; -----------------------------------------------------
+   ;;Selected region to upcase (C-x C-u), downcase (C-x C-l)
+   (put 'upcase-region 'disabled nil)
+   (put 'downcase-region 'disabled nil)
 
- ;; Disable Auto Save and Backup
- ;; Maybe selecting a place for dumb files instead?
- (setq auto-save-default nil)
- (setq make-backup-files nil)
- (setq create-lockfiles nil)
- (setq backup-directory-alist `(("." . "~/.saves")))
+   ;; Scroll down X lines
+   (global-set-key (kbd "M-]") (lambda () (interactive) (scroll-up 4)))
+   (global-set-key (kbd "M-[") (lambda () (interactive) (scroll-down 4)))
+
+   ;; Toggle centered-cursor mode 
+   (global-set-key (kbd "M-\\") 'global-centered-cursor-mode)
+   ;; -----------------------------------------------------
+
+   ;; Disable Auto Save and Backup
+   ;; Maybe selecting a place for dumb files instead?
+   (setq auto-save-default nil)
+   (setq make-backup-files nil)
+   (setq create-lockfiles nil)
+   (setq backup-directory-alist `(("." . "~/.saves")))
 
 
  #+END_SRC
@@ -999,16 +903,122 @@
   (smartparens-global-mode 1))
 
 #+END_SRC
+* Esthetics
+** theme
+ #+BEGIN_SRC emacs-lisp
+
+  (use-package dracula-theme
+    :ensure t
+    :init
+    (load-theme 'dracula t))
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
+  ;; Set default font
+
+  (set-face-attribute 'default nil
+		       :family "Monaco Nerd Font"
+		       :foundry "PfEd"
+		       :height 150
+		       :weight 'bold
+		       :width 'normal)
+
+  ;; colorsssss
+  (if (display-graphic-p)
+      (setq initial-frame-alist
+	     '(
+	       (tool-bar-lines . 0)
+	       (width . 106)
+	       (height . 60)
+	       (background-color . "#101010")
+	       (left . 50)
+	       (top . 50)))
+    (setq initial-frame-alist '( (tool-bar-lines . 0))))
+  (setq default-frame-alist initial-frame-alist)
+
+  (add-to-list 'default-frame-alist '(background-color . "#101010"))
+  (set-foreground-color "#ffffff")
+
+  (set-face-foreground 'font-lock-comment-face "gray34")
+  (set-face-foreground 'font-lock-doc-face
+		        (face-foreground font-lock-comment-face))
+  (set-face-attribute 'region nil :background "#555566")
+
+
+  (global-hl-line-mode t)
+  (set-face-background 'hl-line "#181f1f")
+  (set-face-foreground 'highlight nil)
+
+  ;;Cursor
+  (setq evil-insert-state-cursor '(box "Red")
+	 evil-normal-state-cursor '(box "MediumPurple1"))
+  (blink-cursor-mode 0)
+
+  ;; bars
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  ;; fringe like "padding"
+  (set-fringe-mode 25)
+  (set-face-attribute 'fringe nil :background "#101010" :foreground "#101010")
+
+  ;; DEFAULT FORMAT
+  (defun mode-line-fill (face reserve)
+    "Return empty space using FACE and leaving RESERVE space on the right."
+    (when
+      (and window-system (eq 'right (get-scroll-bar-mode)))
+      (setq reserve (- reserve 3)))
+    (propertize " "
+      'display
+      `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
+      'face face
+      )
+    )
+
+  (setq-default mode-line-format
+		 (list
+		  '(:eval (propertize "%b" 'face '(:weight bold)))
+		  '(:eval (if (buffer-modified-p)
+			      (propertize "  " 'face '(:foreground "#f92672"))
+			    (propertize "  " 'face '(:foreground "#bd93f9"))))
+		  '(:eval (propertize "%m" 'face '(:weight bold)))
+		  '(:eval (mode-line-fill 'mode-line 9))
+		  '(:eval (propertize "  " 'face '(:foreground "#bd93f9")))
+		  '(:eval (propertize "%l" 'face '(:weight bold)))))
+  (setq frame-title-format '(("[%b]\n\n")minor-mode-alist))
+
+  (set-face-background
+   'mode-line "#101010")
+  (set-face-foreground 'mode-line "#ffffff")
+  (custom-set-faces
+   '(mode-line ((t (:box (:line-width 1 :color "#101010")))))
+   '(mode-line-inactive ((t (:background "#101010" :foreground "#444455" :box (:line-width 1 :color "#101010" :style unspecified)))))
+   '(header-line ((t (:background "#101010" :weight bold))))
+   )
+  ;; (set-frame-parameter nil 'internal-border-width 10)
+
+  ;; no modeline
+  ;; (setq-default mode-line-format nil)
+
+ #+END_SRC
+** all the icons 
+   #+BEGIN_SRC emacs-lisp
+   (use-package all-the-icons-dired
+   :ensure t
+   :config
+   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+   
+   (use-package all-the-icons-ivy
+   :ensure t
+   :config
+   (all-the-icons-ivy-setup))
+
+   #+END_SRC
+
 * Other tools 
 ** pdf
  #+BEGIN_SRC emacs-lisp
-
- (use-package pdf-tools
-   :ensure t
-   :config
-   (pdf-tools-install)
-   )
-
  (use-package org-pdfview
   :ensure t)
 
