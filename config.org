@@ -423,26 +423,56 @@
 ** dired
  #+BEGIN_SRC emacs-lisp
 
- ;; Adds many functionalities to dired mode (including <open all marked files>)
+    ;; Adds many functionalities to dired mode (including <open all marked files>)
 
- (use-package diredful
-   :ensure t
-   :config
-   (diredful-mode 1)
-)
 
-  (defun dc/dired-mode-keys ()
-    "User defined keys for dired mode."
-    (interactive)
-    (local-set-key (kbd "K") 'dired-kill-subdir)
-    )
- (add-hook 'dired-mode-hook 'dc/dired-mode-keys)
+   ;;  (require 'dired-x)
 
- (add-hook 'dired-mode-hook
-       (lambda ()
-         (dired-hide-details-mode)
-         (dired-sort-toggle-or-edit)))
+   ;;  (use-package diredful
+   ;;    :ensure t
+   ;;    :config
+   ;;    (diredful-mode 1)
+   ;; )
 
+   ;;   (defun dc/dired-mode-keys ()
+   ;;     "User defined keys for dired mode."
+   ;;     (interactive)
+   ;;     (local-set-key (kbd "K") 'dired-kill-subdir)
+   ;;     )
+   ;;  (add-hook 'dired-mode-hook 'dc/dired-mode-keys)
+
+   ;;  (add-hook 'dired-mode-hook
+   ;;        (lambda ()
+   ;;          (dired-hide-details-mode)
+   ;;          (dired-sort-toggle-or-edit)))
+
+   (require 'dired-x)
+   (setq-default dired-omit-files-p t) ; Buffer-local variable
+   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+   (add-hook 'dired-mode-hook
+             (lambda ()
+               (define-key dired-mode-map (kbd "M-p")
+                           (lambda () (interactive) (find-alternate-file "..")))))
+
+   (defun dc/dired-mode-keys ()
+     "User defined keys for dired mode."
+     (interactive)
+     (local-set-key (kbd "K") 'dired-kill-subdir)
+     )
+   (add-hook 'dired-mode-hook 'dc/dired-mode-keys)
+   ;;dired only showing file name
+   (add-hook 'dired-mode-hook
+             (lambda ()
+               (dired-hide-details-mode)))
+   ;;preview files in dired
+   (use-package peep-dired
+     :ensure t
+     :defer t ; don't access dired-mode-map' untilpeep-dired' is loaded
+     :bind (:map dired-mode-map
+                 ("P" . peep-dired))
+     :config
+     (setq peep-dired-cleanup-on-disable t)
+     )
  #+END_SRC
 ** ggtags
  #+BEGIN_SRC emacs-lisp
@@ -907,103 +937,112 @@
 ** theme
  #+BEGIN_SRC emacs-lisp
 
-  (use-package dracula-theme
-    :ensure t
-    :init
-    (load-theme 'dracula t))
+   (use-package dracula-theme
+     :ensure t
+     :init
+     (load-theme 'dracula t))
 
-  (use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
-  ;; Set default font
+   (use-package rainbow-delimiters
+     :ensure t
+     :hook (prog-mode . rainbow-delimiters-mode))
 
-  (set-face-attribute 'default nil
-		       :family "Monaco Nerd Font"
-		       :foundry "PfEd"
-		       :height 150
-		       :weight 'bold
-		       :width 'normal)
+   ;; Set default font
+   (set-face-attribute 'default nil
+                        :family "Monaco Nerd Font"
+                        :foundry "PfEd"
+                        :height 150
+                        :weight 'bold
+                        :width 'normal)
 
-  ;; colorsssss
-  (if (display-graphic-p)
-      (setq initial-frame-alist
-	     '(
-	       (tool-bar-lines . 0)
-	       (width . 106)
-	       (height . 60)
-	       (background-color . "#101010")
-	       (left . 50)
-	       (top . 50)))
-    (setq initial-frame-alist '( (tool-bar-lines . 0))))
-  (setq default-frame-alist initial-frame-alist)
+   ;; colorsssss
+   (if (display-graphic-p)
+       (setq initial-frame-alist
+              '(
+                (tool-bar-lines . 0)
+                (width . 106)
+                (height . 60)
+                (background-color . "#101010")
+                (left . 50)
+                (top . 50)))
+     (setq initial-frame-alist '( (tool-bar-lines . 0))))
+   (setq default-frame-alist initial-frame-alist)
 
-  (add-to-list 'default-frame-alist '(background-color . "#101010"))
-  (set-foreground-color "#ffffff")
+   (add-to-list 'default-frame-alist '(background-color . "#101010"))
+   (set-foreground-color "#ffffff")
 
-  (set-face-foreground 'font-lock-comment-face "gray34")
-  (set-face-foreground 'font-lock-doc-face
-		        (face-foreground font-lock-comment-face))
-  (set-face-attribute 'region nil :background "#555566")
+   (set-face-foreground 'font-lock-comment-face "gray34")
+   (set-face-foreground 'font-lock-doc-face
+                         (face-foreground font-lock-comment-face))
+   (set-face-attribute 'region nil :background "#555566")
 
+  
+   ;; highlight current line 
+   (global-hl-line-mode t)
+   (set-face-background 'hl-line "#181f1f")
+   (set-face-foreground 'highlight nil)
 
-  (global-hl-line-mode t)
-  (set-face-background 'hl-line "#181f1f")
-  (set-face-foreground 'highlight nil)
+   ;;Cursor
+   (setq evil-insert-state-cursor '(box "Red")
+          evil-normal-state-cursor '(box "MediumPurple1"))
+   (blink-cursor-mode 0)
 
-  ;;Cursor
-  (setq evil-insert-state-cursor '(box "Red")
-	 evil-normal-state-cursor '(box "MediumPurple1"))
-  (blink-cursor-mode 0)
+   ;; bars
+   (menu-bar-mode -1)
+   (tool-bar-mode -1)
+   (scroll-bar-mode -1)
+   ;; fringe like "padding"
+   (set-fringe-mode 25)
+   (set-face-attribute 'fringe nil :background "#101010" :foreground "#101010")
 
-  ;; bars
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  ;; fringe like "padding"
-  (set-fringe-mode 25)
-  (set-face-attribute 'fringe nil :background "#101010" :foreground "#101010")
+   ;; DEFAULT FORMAT
+   (defun mode-line-fill (face reserve)
+     "Return empty space using FACE and leaving RESERVE space on the right."
+     (when
+       (and window-system (eq 'right (get-scroll-bar-mode)))
+       (setq reserve (- reserve 3)))
+     (propertize " "
+       'display
+       `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
+       'face face
+       )
+     )
 
-  ;; DEFAULT FORMAT
-  (defun mode-line-fill (face reserve)
-    "Return empty space using FACE and leaving RESERVE space on the right."
-    (when
-      (and window-system (eq 'right (get-scroll-bar-mode)))
-      (setq reserve (- reserve 3)))
-    (propertize " "
-      'display
-      `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
-      'face face
-      )
+   (setq-default mode-line-format
+                  (list
+                   '(:eval (propertize "%b" 'face '(:weight bold)))
+                   '(:eval (if (buffer-modified-p)
+                               (propertize "  " 'face '(:foreground "#f92672"))
+                             (propertize "  " 'face '(:foreground "#bd93f9"))))
+                   '(:eval (propertize "%m" 'face '(:weight bold)))
+                   '(:eval (mode-line-fill 'mode-line 9))
+                   '(:eval (propertize "  " 'face '(:foreground "#bd93f9")))
+                   '(:eval (propertize "%l" 'face '(:weight bold)))))
+   (setq frame-title-format '(("[%b]\n\n")minor-mode-alist))
+
+   ;; Custom faces (from init.el)
+   (set-face-background
+    'mode-line "#101010")
+   (set-face-foreground 'mode-line "#ffffff")
+   (custom-set-faces
+    '(default ((t (:family "MonacoB2" :foundry "pyrs" :slant normal :weight bold :height 128 :width normal))))
+    '(mode-line ((t (:box (:line-width 1 :color "#101010")))))
+    '(mode-line-inactive ((t (:background "#101010" :foreground "#444455" :box (:line-width 1 :color "#101010" :style unspecified)))))
+    '(header-line ((t (:background "#101010" :weight bold))))
+    '(ivy-virtual ((t (:inherit font-lock-builtin-face :foreground "#333333"))))
+    '(ivy-current-match ((t (:background "#282a36" :foreground "#555566"))))
+
     )
+   ;; (set-frame-parameter nil 'internal-border-width 10)
 
-  (setq-default mode-line-format
-		 (list
-		  '(:eval (propertize "%b" 'face '(:weight bold)))
-		  '(:eval (if (buffer-modified-p)
-			      (propertize "  " 'face '(:foreground "#f92672"))
-			    (propertize "  " 'face '(:foreground "#bd93f9"))))
-		  '(:eval (propertize "%m" 'face '(:weight bold)))
-		  '(:eval (mode-line-fill 'mode-line 9))
-		  '(:eval (propertize "  " 'face '(:foreground "#bd93f9")))
-		  '(:eval (propertize "%l" 'face '(:weight bold)))))
-  (setq frame-title-format '(("[%b]\n\n")minor-mode-alist))
-
-  (set-face-background
-   'mode-line "#101010")
-  (set-face-foreground 'mode-line "#ffffff")
-  (custom-set-faces
-   '(mode-line ((t (:box (:line-width 1 :color "#101010")))))
-   '(mode-line-inactive ((t (:background "#101010" :foreground "#444455" :box (:line-width 1 :color "#101010" :style unspecified)))))
-   '(header-line ((t (:background "#101010" :weight bold))))
-   )
-  ;; (set-frame-parameter nil 'internal-border-width 10)
-
-  ;; no modeline
-  ;; (setq-default mode-line-format nil)
+   ;; no modeline
+   ;; (setq-default mode-line-format nil)
 
  #+END_SRC
 ** all the icons 
    #+BEGIN_SRC emacs-lisp
+   (use-package all-the-icons
+   :ensure t)
+   
    (use-package all-the-icons-dired
    :ensure t
    :config
@@ -1078,8 +1117,11 @@
 
  ;; Define agenda folder and shortcut 
  (setq org-agenda-files (list "~/Documents/School/agenda.org"))
+ 
+ ;; Org-mode keybindings 
  (define-key org-mode-map (kbd "C-c C-a") 'org-agenda)
-
+ (define-key org-mode-map (kbd "C-c C-h") 'counsel-org-goto-all)
+ 
  (use-package org
    :ensure t 
    :init
