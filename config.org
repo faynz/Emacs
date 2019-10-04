@@ -404,8 +404,8 @@
    (put 'downcase-region 'disabled nil)
 
    ;; Scroll down X lines
-   (global-set-key (kbd "M-]") (lambda () (interactive) (scroll-up 4)))
-   (global-set-key (kbd "M-[") (lambda () (interactive) (scroll-down 4)))
+   (global-set-key (kbd "M-[") (lambda () (interactive) (scroll-up 4)))
+   (global-set-key (kbd "M-]") (lambda () (interactive) (scroll-down 4)))
 
    ;; Toggle centered-cursor mode 
    (global-set-key (kbd "M-\\") 'global-centered-cursor-mode)
@@ -929,8 +929,12 @@
 (use-package smartparens
   :ensure t
   :config
-  (require 'smartparens-config)
-  (smartparens-global-mode 1))
+  (smartparens-global-mode)
+  (global-set-key (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+  (setq sp-escape-quotes-after-insert nil)
+
+  
+)
 
 #+END_SRC
 * Esthetics
