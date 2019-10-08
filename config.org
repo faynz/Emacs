@@ -498,17 +498,7 @@
  )
 
  #+END_SRC
-** whichkey
- #+BEGIN_SRC emacs-lisp
 
- ;; Shows possible suffix keys
- (use-package which-key
-   :ensure t
-   :config
-   (which-key-mode)
-   )
-
- #+END_SRC
 ** ace-window
  #+BEGIN_SRC emacs-lisp
  (use-package ace-window
@@ -589,6 +579,22 @@
  )
 
  #+END_SRC
+
+** whichkey
+
+#+BEGIN_SRC emacs-lisp
+  ; evil must be loaded before which-key for completion to work with evil-mode
+  ; which keys shows menu with completions of prefix-key
+  (use-package which-key
+  :ensure t
+    :diminish
+    :config
+    (setq which-key-idle-delay 2.0
+          which-key-show-operator-state-maps t)
+    (which-key-mode))
+#+END_SRC
+
+
 ** hydra
  #+BEGIN_SRC emacs-lisp
 
