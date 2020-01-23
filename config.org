@@ -373,7 +373,7 @@
   (defun open-term ()
     "Lists the contents of the current directory."
     (interactive)
-    (call-process "alacritty" nil 0 nil))
+    (call-process "gnome-terminal" nil 0 nil))
 
   (defun open-terminal-in-project-root ()
     "Open default terminal in the project root."
