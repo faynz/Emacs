@@ -447,6 +447,7 @@
   (global-set-key (kbd "M-?") 'mark-paragraph)
   (global-set-key (kbd "C-h") 'delete-backward-char)
   (global-set-key (kbd "M-h") 'backward-kill-word)
+  (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
 
   ;;SCROLL 1 LINE
   (global-set-key (kbd "M-n") (lambda () (interactive) (scroll-up 4)))
