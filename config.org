@@ -360,6 +360,12 @@
     :ensure t
     :config
     (add-hook 'html-mode-hook 'web-mode))
+  (use-package tide
+    :ensure t
+    )
+  (use-package typescript-mode
+    :ensure t
+    )
 #+END_SRC
 * global
 #+BEGIN_SRC emacs-lisp
