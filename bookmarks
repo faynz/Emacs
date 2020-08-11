@@ -1,0 +1,35 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("Food"
+ (filename . "~/Documents/Food/")
+ (front-context-string . "add.html\n  drwxr")
+ (rear-context-string . "05 Aug  2 17:04 ")
+ (position . 121))
+("Sociologie"
+ (filename . "~/Documents/Sociologie/")
+ (front-context-string . "Individuel\n  -rw")
+ (rear-context-string . "96 Jun 11 15:33 ")
+ (position . 133))
+("emacs"
+ (filename . "~/.emacs.d/config.org")
+ (front-context-string . "* packages\n#+BEG")
+ (rear-context-string)
+ (position . 1))
+("Music"
+ (filename . "/run/media/stfn/3165a66d-6b99-4470-8367-c3c8a480ed41/Music/")
+ (front-context-string . "23+Reason+OST+-+")
+ (rear-context-string . "28 Mar  8 19:00 ")
+ (position . 164))
+("i3config"
+ (filename . "~/.config/i3/config")
+ (front-context-string . "#  _ _____      ")
+ (rear-context-string)
+ (position . 1))
+("dunstrc"
+ (filename . "~/.config/dunst/dunstrc")
+ (front-context-string . "[global]\n    ###")
+ (rear-context-string)
+ (position . 1))
+)

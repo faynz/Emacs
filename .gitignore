@@ -1,0 +1,13 @@
+# exclude everything
+*
+# except subdirectories
+!*/
+# and all these
+!init.el
+!config.org
+!ws1.el
+!ws2.el
+!ws3.el
+!.gitignore
+!themes/*.el
+!bookmarks

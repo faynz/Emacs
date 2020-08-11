@@ -1,12 +1,12 @@
 * packages
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (defun package--save-selected-packages (&optional value)
     "Set and save `package-selected-packages' to VALUE."
     (when value
       (setq package-selected-packages value)))
-#+END_SRC
+  #+END_SRC
 * theme
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   ;;; THEME ;;;
   (load "~/.emacs.d/themes/spacemacs-common.el")
   (load "~/.emacs.d/themes/spacemacs-dark-theme.elc")
@@ -80,9 +80,9 @@
   ;; 		    :weight 'bold
   ;; 		    :width 'normal)
 
-#+END_SRC
+  #+END_SRC
 * buffers
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (setq-default message-log-max nil)
   (when (get-buffer "*Messages*")
     (kill-buffer "*Messages*"))
@@ -93,9 +93,9 @@
     (switch-to-buffer (other-buffer)))
 
   (global-set-key (kbd "C-<tab>") 'switch-to-previous-buffer)
-#+END_SRC
+  #+END_SRC
 * avy
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package avy
     :ensure t
     :bind
@@ -109,9 +109,9 @@
     ;; Jump across different emacs buffers
     (setq avy-all-windows 'all-frames)
     )
-#+END_SRC
+  #+END_SRC
 * evil
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (setq evil-want-C-u-scroll t)
   (use-package evil
     :ensure t
@@ -158,10 +158,10 @@
     (define-key evil-motion-state-map (kbd "SPC k") 'avy-goto-line-above)
     (define-key evil-motion-state-map (kbd "SPC l") 'avy-goto-char-2)
     )
-#+END_SRC
+  #+END_SRC
 * programming
 ** projectile
- #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
    (use-package projectile
      :ensure t
      :init
@@ -180,9 +180,9 @@
      (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
      (counsel-projectile-mode)
      )
- #+END_SRC
+   #+END_SRC
 ** prog-styles
- #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
    (defun c-setup-comment ()
 	 (setq comment-start "/*"
 		   comment-end   "*/"
@@ -208,10 +208,10 @@
    (add-hook 'c++-mode-common-hook 'c-setup)
    (add-hook 'c++-mode-hook 'c-setup)
 
- #+END_SRC
+   #+END_SRC
 ** ide-features
 *** eglot
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     (use-package eglot
       :ensure t)
 
@@ -241,9 +241,9 @@
 
     (add-hook 'c++-mode-hook 'c-eglot-enable)
     (add-hook 'c-mode-hook 'c-eglot-enable)
-  #+END_SRC
+    #+END_SRC
 *** eclim
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     (use-package eclim
       :ensure t
       :config
@@ -254,9 +254,9 @@
       (global-set-key (kbd "C-c C-e e") 'eclim-problems-show-errors)
       (global-set-key (kbd "C-c C-e c") 'eclim-problems-correct)
       )
-  #+END_SRC
+    #+END_SRC
 *** company
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     (use-package company-jedi
       :ensure t
       )
@@ -287,13 +287,13 @@
 	       ))
 	    )
       )
-  #+END_SRC
+    #+END_SRC
 *** cedet
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     ;; (semantic-add-system-include "/usr/include/c++/9.2.0" 'c++-mode)
     (add-hook 'c++-mode-hook 'semantic-mode)
     (add-hook 'c-mode-hook 'semantic-mode)
-  #+END_SRC
+    #+END_SRC
 ** smartparens
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens
@@ -308,7 +308,7 @@
 	 (interactive)
 	 (progn
 	   (newline-and-indent)
-	   (previous-line) (previous-line) (search-forward "{") 
+	   (previous-line) (previous-line) (search-forward "{")
 	   (next-line) (indent-according-to-mode)))
        (sp-local-pair '(java-mode) "{" nil :post-handlers '((my-create-newline-and-allman-format "RET")))
        (sp-local-pair '(c-mode) "{" nil :post-handlers '((my-create-newline-and-allman-format "RET")))
@@ -317,7 +317,7 @@
        )
    #+END_SRC
 * dired
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (require 'dired-x)
   (setq-default dired-omit-files-p t) ; Buffer-local variable
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
@@ -345,9 +345,9 @@
     :config
     (setq peep-dired-cleanup-on-disable t)
     )
-#+END_SRC
+  #+END_SRC
 * web
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
     :ensure t
     :config
@@ -356,19 +356,43 @@
     (add-hook 'html-mode-hook 'emmet-mode)
     )
 
+    ;; emmet-mode-map won't work (it's keymap instead)
+    (define-key emmet-mode-keymap (kbd "<C-return>") 'avy-goto-line) ;; remove emmet-expand-line shortcut and replace
+
   (use-package web-mode
     :ensure t
     :config
     (add-hook 'html-mode-hook 'web-mode))
+
   (use-package tide
     :ensure t
-    )
+    :config
+    (defun setup-tide-mode ()
+      (interactive)
+      (tide-setup)
+      (flycheck-mode +1)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+      (eldoc-mode +1)
+      (tide-hl-identifier-mode +1))
+    (add-hook 'typescript-mode-hook #'setup-tide-mode)
+    (add-hook 'js-mode-hook #'setup-tide-mode)
+    (add-hook 'javascript-mode-hook #'setup-tide-mode))
+
   (use-package typescript-mode
     :ensure t
     )
-#+END_SRC
+
+  (use-package lorem-ipsum
+    :ensure t
+    :config
+    (lorem-ipsum-use-default-bindings)
+    ;; (global-set-key (kbd "C-c C-l s") 'lorem-ipsum-insert-sentences)
+    ;; (global-set-key (kbd "C-c C-l p") 'lorem-ipsum-insert-paragraphs)
+    ;; (global-set-key (kbd "C-c C-l l") 'lorem-ipsum-insert-list)
+    )
+  #+END_SRC
 * global
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   ;;config files syntax
   (require 'generic-x)
   (add-to-list 'auto-mode-alist '("\\rc\\'" . conf-mode))
@@ -379,7 +403,7 @@
   (defun open-term ()
     "Lists the contents of the current directory."
     (interactive)
-    (call-process "gnome-terminal" nil 0 nil))
+    (call-process "alacritty" nil 0 nil))
 
   (defun open-terminal-in-project-root ()
     "Open default terminal in the project root."
@@ -397,6 +421,8 @@
     "Lists the contents of the current directory."
     (interactive)
     (call-process "nautilus" nil 0 nil "."))
+
+  (global-set-key (kbd "C-c n") 'open-nautilus)
 
   ;;y for yes
   (fset 'yes-or-no-p 'y-or-n-p)
@@ -576,19 +602,19 @@
 
   Within CMD, %i denotes the input file(s), and %o denotes the
   output file. %i path(s) are relative, while %o is absolute.")
-#+END_SRC
+  #+END_SRC
 * ace-window
- #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
  (use-package ace-window
    :ensure t
    :config
    (global-set-key (kbd "C-c a") 'ace-window)
    )
 
-#+END_SRC
+  #+END_SRC
 
 * hydra
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package hydra
     :ensure t
     :config
@@ -697,9 +723,9 @@
       ("q" nil "quit" :blue t)
       )
     )
-#+END_SRC
+  #+END_SRC
 * ivy
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (defun ivy-view-backtrace ()
     (interactive)
     (switch-to-buffer "*ivy-backtrace*")
@@ -816,9 +842,9 @@
     :config
     (ivy-set-display-transformer 'counsel-describe-function nil)
     )
-#+END_SRC
+  #+END_SRC
 * magit
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
     :bind
@@ -827,9 +853,9 @@
     :config
     (global-magit-file-mode)
     )
-#+END_SRC
+  #+END_SRC
 * smartrep
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 
  ;; Setting new prefix key for multiple cursors
 
@@ -867,10 +893,10 @@
       ))
    )
 
- #+END_SRC
+  #+END_SRC
 
 * mc
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
     :ensure t
     :config
@@ -894,9 +920,9 @@
     )
 
 
-#+END_SRC
+  #+END_SRC
 * neotree
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package neotree
     :ensure t
     :bind
@@ -906,9 +932,9 @@
     (setq neo-smart-open t)
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
     )
-#+END_SRC
+  #+END_SRC
 * org
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure t
     :init
@@ -926,18 +952,18 @@
 
   (define-key org-mode-map (kbd "C-c C-a") 'org-agenda)
   (define-key org-mode-map (kbd "C-c h") 'counsel-org-goto-all)
-#+END_SRC
+  #+END_SRC
 * whichkey
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 ;; Shows possible suffix keys
 (use-package which-key
   :ensure t
   :config
   (which-key-mode)
   )
-#+END_SRC
+  #+END_SRC
 * openwith
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package openwith
     :ensure t
     :config
@@ -979,9 +1005,9 @@
       (openwith-mode 1))
     )
   (setq large-file-warning-threshold nil)
-#+END_SRC
+  #+END_SRC
 * yasnippet
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure t
     :config
@@ -990,10 +1016,10 @@
   (use-package yasnippet-snippets
     :ensure t
     )
-#+END_SRC
+  #+END_SRC
 
 * all the icons
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
     (use-package all-the-icons
       :ensure t)
 
@@ -1007,4 +1033,4 @@
       :config
       (all-the-icons-ivy-setup))
 
-#+END_SRC
+  #+END_SRC
