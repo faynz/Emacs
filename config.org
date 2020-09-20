@@ -111,76 +111,148 @@
     )
   #+END_SRC
 * evil
-  #+BEGIN_SRC emacs-lisp
-  (setq evil-want-C-u-scroll t)
-  (use-package evil
-    :ensure t
-    :config
-    (evil-mode 1)
-    ;;emacs state is i state
-    (setq evil-insert-state-map (make-sparse-keymap))
-    (define-key evil-insert-state-map (kbd "<escape>") 'evil-normal-state)
-
-    (add-to-list 'evil-emacs-state-modes 'nav-mode)
-    ;; (add-hook 'nav-mode-hook 'evil-emacs-state-modes)
-    ;; (add-hook 'read-only-mode-hook 'evil-emacs-state-modes)
-    ;; (add-hook 'dashboard-mode-hook 'evil-emacs-state-modes)
-
-    (evil-set-initial-state 'dashboard-mode 'emacs)
-    (evil-set-initial-state 'ibuffer-mode 'emacs)
-    (evil-set-initial-state 'bookmark-bmenu-mode 'emacs)
-    (evil-set-initial-state 'dired-mode 'emacs)
-    (evil-set-initial-state 'sunrise-mode 'emacs)
-    (evil-set-initial-state 'image-mode 'emacs)
-    (evil-set-initial-state 'pdf-view-mode 'emacs)
-
-    (define-key evil-normal-state-map (kbd "gd") 'xref-find-definitions)
-    (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
-    (define-key evil-normal-state-map (kbd "M-,") 'xref-pop-marker-stack)
-
-    (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-    (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-    (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-    (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-    (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
-    (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-    (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
-    (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-    (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
-
-
-    (define-key evil-motion-state-map "'" 'evil-goto-mark)
-    (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
-
-    (define-key evil-motion-state-map " " nil)
-    (define-key evil-motion-state-map (kbd "SPC h") 'avy-goto-char-timer)
-    (define-key evil-motion-state-map (kbd "SPC j") 'avy-goto-line-below)
-    (define-key evil-motion-state-map (kbd "SPC k") 'avy-goto-line-above)
-    (define-key evil-motion-state-map (kbd "SPC l") 'avy-goto-char-2)
-    )
-  #+END_SRC
-* programming
-** projectile
-   #+BEGIN_SRC emacs-lisp
-   (use-package projectile
+ #+BEGIN_SRC emacs-lisp
+   (use-package evil
      :ensure t
      :init
-     (use-package counsel-projectile
-       :ensure t
-       :init
-       (setq projectile-completion-system 'ivy)
-       (setq projectile-project-root-files #'( ".projectile" ))
-       (setq projectile-project-root-files-functions #'(projectile-root-top-down
-							projectile-root-top-down-recurring
-							projectile-root-bottom-up
-							projectile-root-local))
-       )
-
+     (setq-default evil-want-C-u-scroll t)
      :config
-     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-     (counsel-projectile-mode)
-     )
-   #+END_SRC
+     (evil-mode 1)
+     (setq evil-normal-state-tag " NORMAL ")
+     (setq evil-insert-state-tag " INSERT ")
+     (setq evil-visual-state-tag " VISUAL ")
+     ;;emacs state is i state
+     (setq evil-insert-state-map (make-sparse-keymap))
+     (define-key evil-insert-state-map (kbd "<escape>") 'evil-normal-state)
+     (add-to-list 'evil-emacs-state-modes 'nav-mode)
+     (define-key evil-normal-state-map (kbd "gd") 'xref-find-definitions)
+     (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+     (define-key evil-normal-state-map (kbd "M-,") 'xref-pop-marker-stack)
+     (with-eval-after-load 'evil-maps
+       (define-key evil-motion-state-map (kbd "SPC") nil)
+       (define-key evil-motion-state-map (kbd "RET") nil)
+       (define-key evil-motion-state-map (kbd "TAB") nil))
+     (evil-set-initial-state 'vterm-mode 'insert)
+     (define-key evil-motion-state-map "'" 'evil-goto-mark)
+     (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
+     (define-key evil-motion-state-map " " nil)
+     (define-key evil-motion-state-map (kbd "K") 'man)
+     (define-key evil-motion-state-map (kbd "g c") 'avy-goto-char-2)
+     (define-key evil-motion-state-map (kbd "g l") 'avy-line-saving-column)
+     (define-key evil-normal-state-map (kbd "SPC 1") 'delete-other-windows)
+     (define-key evil-normal-state-map (kbd "SPC 2") 'split-window-below)
+     (define-key evil-normal-state-map (kbd "SPC 3") 'split-window-right)
+     (define-key evil-normal-state-map (kbd "SPC 4 0") 'kill-buffer-and-window)
+     (define-key evil-normal-state-map (kbd "SPC 0") 'delete-window)
+     (define-key evil-normal-state-map (kbd "SPC f") 'find-file)
+     (define-key evil-normal-state-map (kbd "SPC b") 'ivy-switch-buffer)
+     (define-key evil-normal-state-map (kbd "SPC k") 'all-the-icons-ivy-rich-kill-buffer)
+     (define-key evil-normal-state-map (kbd "SPC r b") 'bookmark-jump)
+     (define-key evil-normal-state-map (kbd "SPC g") 'magit-status)
+     (define-key evil-normal-state-map (kbd "SPC ]") 'flycheck-next-error)
+     (define-key evil-normal-state-map (kbd "SPC [") 'flycheck-previous-error)
+     (define-key evil-motion-state-map (kbd "g r") 'lsp-find-references)
+     (define-key evil-motion-state-map (kbd "g s") 'lsp-ivy-workspace-symbol)
+     (define-key evil-motion-state-map (kbd "g S") 'lsp-ivy-global-workspace-symbol)
+     (define-key evil-motion-state-map (kbd "SPC l l") 'lsp)
+     (define-key evil-motion-state-map (kbd "SPC l e") 'lsp-treemacs-errors-list)
+     (define-key evil-motion-state-map (kbd "SPC l t") 'treemacs-find-tag)
+     (define-key evil-motion-state-map (kbd "SPC l r") 'lsp-rename)
+     (define-key evil-motion-state-map (kbd "SPC l R") 'lsp-workspace-restart)
+     (define-key evil-motion-state-map (kbd "SPC l a") 'helm-lsp-code-actions)
+     (define-key evil-motion-state-map (kbd "SPC l x") 'lsp-workspace-folders-remove)
+     (evil-define-key 'normal java-mode-map
+       (kbd "SPC l d d") 'dap-java-debug
+       (kbd "SPC l d b") 'dap-breakpoint-toggle
+       (kbd "SPC l d h") 'dap-hydra)
+     (evil-define-key 'normal magit-mode-map
+       (kbd "g c") 'avy-goto-char-2
+       (kbd "g l") 'avy-line-saving-column
+       (kbd "SPC 1") 'delete-other-windows
+       (kbd "SPC 2") 'split-window-below
+       (kbd "SPC 3") 'split-window-right
+       (kbd "SPC 4 0") 'kill-buffer-and-window
+       (kbd "SPC 0") 'delete-window
+       (kbd "SPC f") 'find-file
+       (kbd "SPC b") 'ivy-switch-buffer
+       (kbd "SPC k") 'all-the-icons-ivy-rich-kill-buffer
+       (kbd "SPC r b") 'bookmark-jump
+       (kbd "SPC g") 'magit-status)
+     (evil-define-key 'normal dired-mode-map
+       (kbd "g c") 'avy-goto-char-2
+       (kbd "g l") 'avy-line-saving-column
+       (kbd "g r") 'revert-buffer
+       (kbd "SPC 2") 'split-window-below
+       (kbd "SPC 3") 'split-window-right
+       (kbd "SPC 4 0") 'kill-buffer-and-window
+       (kbd "SPC 0") 'delete-window
+       (kbd "SPC f") 'find-file
+       (kbd "SPC b") 'ivy-switch-buffer
+       (kbd "SPC k") 'all-the-icons-ivy-rich-kill-buffer
+       (kbd "SPC r b") 'bookmark-jump
+       (kbd "SPC g") 'magit-status)
+     (evil-define-key 'normal projectile-mode-map
+       (kbd "SPC p") 'projectile-command-map
+       (kbd "SPC TAB") 'projectile-switch-open-project
+       (kbd "SPC p C-c") 'projectile-repeat-last-command)
+     (evil-define-key 'normal xref--xref-buffer-mode-map
+       (kbd "p") 'xref-prev-line
+       (kbd "n") 'xref-next-line)
+     (evil-define-key 'normal flycheck-mode-map
+       (kbd "SPC e") 'flycheck-list-errors)
+     (evil-define-key 'treemacs treemacs-mode-map
+       (kbd "J") #'treemacs-find-file)
+     (evil-define-key 'normal tide-mode-map
+       (kbd "g d") 'tide-jump-to-definition
+       (kbd "g r") 'xref-find-references
+       (kbd "SPC l e") 'tide-project-errors
+       (kbd "SPC t r") 'tide-rename-symbol
+       (kbd "SPC t R") 'tide-rename-file
+       (kbd "SPC t f") 'tide-fix))
+ #+END_SRC
+* programming
+** projectile
+  #+BEGIN_SRC emacs-lisp
+    (use-package projectile
+      :ensure t
+      :config
+      (projectile-global-mode 1)
+      (setq projectile-completion-system 'ivy)
+      (put 'projectile-project-compilation-dir 'safe-local-variable (lambda (_) t))
+      (setq projectile-switch-project-action #'counsel-projectile-switch-to-buffer)
+      ;; (put 'projectile-project-compilation-cmd 'safe-local-variable (lambda (_) t))
+      (add-to-list 'safe-local-variable-values '(projectile-project-compilation-cmd . "make")))
+  #+END_SRC
+** counsel-projectile
+ #+BEGIN_SRC emacs-lisp
+   (use-package counsel-projectile
+     :after counsel
+     :ensure t
+     :config
+     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+     (define-key counsel-mode-map (kbd "C-j") 'ivy-call)
+     (defun counsel-projectile-switch-to-buffer ()
+       "Jump to a buffer in the current project."
+       (interactive)
+       (if (and (eq projectile-require-project-root 'prompt)
+                (not (projectile-project-p)))
+           (counsel-projectile-switch-to-buffer-action-switch-project)
+         (ivy-read (projectile-prepend-project-name "Switch to buffer: ")
+                   ;; We use a collection function so that it is called each
+                   ;; time the `ivy-state' is reset. This is needed for the
+                   ;; "kill buffer" action.
+                   (delete (buffer-name (current-buffer))
+                           (projectile-project-buffer-names))
+                   :matcher #'ivy--switch-buffer-matcher
+                   :require-match t
+                   :sort counsel-projectile-sort-buffers
+                   :action counsel-projectile-switch-to-buffer-action
+                   :keymap counsel-projectile-switch-to-buffer-map
+                   :caller 'counsel-projectile-switch-to-buffer)))
+     (ivy-configure 'counsel-projectile-switch-to-buffer
+       :display-transformer-fn #'counsel-projectile-switch-to-buffer-transformer)
+     (counsel-projectile-mode))
+ #+END_SRC
 ** prog-styles
    #+BEGIN_SRC emacs-lisp
    (defun c-setup-comment ()
@@ -210,38 +282,6 @@
 
    #+END_SRC
 ** ide-features
-*** eglot
-    #+BEGIN_SRC emacs-lisp
-    (use-package eglot
-      :ensure t)
-
-    (defvar clangd-exe (executable-find "clangd")
-      "clangd executable path")
-
-    (defun projectile-proj-find-function (dir)
-      (let ((root (projectile-project-root dir)))
-	(and root (cons 'transient root))))
-
-    (defun c-eglot-enable ()
-      "enable variables and hooks for eglot cpp IDE"
-      (interactive)
-      (setq company-backends
-	    (cons 'company-capf
-		  (remove 'company-capf company-backends)))
-      (projectile-mode t)
-      (with-eval-after-load 'project
-	(add-to-list 'project-find-functions
-		     'projectile-proj-find-function))
-      (add-to-list 'eglot-server-programs
-		   `((c++-mode) ,clangd-exe))
-      (add-to-list 'eglot-server-programs
-		   `((c-mode) ,clangd-exe))
-      (eglot-ensure)
-      )
-
-    (add-hook 'c++-mode-hook 'c-eglot-enable)
-    (add-hook 'c-mode-hook 'c-eglot-enable)
-    #+END_SRC
 *** eclim
     #+BEGIN_SRC emacs-lisp
     (use-package eclim
@@ -316,6 +356,79 @@
 
        )
    #+END_SRC
+** lsp (c/c++, python, java, go)
+ #+BEGIN_SRC emacs-lisp
+   (use-package lsp-mode
+     :ensure t
+     ;; set prefix for lsp-command-keymap
+     :init
+     (setq lsp-keymap-prefix "C-c l")
+     :hook ((c++-mode . lsp)
+            (c-mode . lsp)
+            (java-mode . lsp)
+            (go-mode . lsp)
+            (python-mode . lsp))
+     :commands lsp
+     :config
+     (setq-default lsp-enable-indentation nil)
+     (setq-default lsp-enable-on-type-formatting nil)
+     )
+   (use-package lsp-java
+     :after lsp
+     :ensure t)
+   (use-package helm-lsp
+     :after helm lsp
+     :ensure t)
+
+
+     ;; Format C/C++ 
+     (defun c-er-indent-region-or-buffer ()
+     "Indent a region if selected, otherwise the whole buffer."
+     (interactive)
+     (save-excursion
+       (if (region-active-p)
+       (progn
+         (lsp-format-region (region-beginning) (region-end))
+         (message "Indented selected region."))
+     (progn
+       (lsp-format-buffer)
+       (message "Indented buffer.")))))
+
+   (add-hook 'c-mode-hook
+         (lambda () (local-set-key (kbd "C-M-\") #'c-er-indent-region-or-buffer)))
+   (add-hook 'c++-mode-hook
+         (lambda () (local-set-key (kbd "C-M-\") #'c-er-indent-region-or-buffer)))
+
+ #+END_SRC
+** helm
+ #+BEGIN_SRC emacs-lisp
+   (use-package helm
+     :ensure t
+     :config
+     (require 'helm-config)
+     (defvar emacs-helm-display-help-buffer-regexp '("\\*.*Helm.*Help.*\\*"))
+     (defvar emacs-helm-display-buffer-regexp `("\\*.*helm.*\\*"
+						(display-buffer-in-side-window)
+						(inhibit-same-window . nil)
+						(side . bottom)
+						(window-width . 0.6)
+						(window-height . 0.4)))
+     (defun display-helm-at-bottom (buffer &optional _resume)
+       (let ((display-buffer-alist (list emacs-helm-display-help-buffer-regexp
+					 emacs-helm-display-buffer-regexp)))
+	 (display-buffer buffer)))
+     (setq helm-display-function 'display-helm-at-bottom)
+     (setq helm-swoop-split-window-function 'display-helm-at-bottom)
+     (setq use-dialog-box nil)
+     (define-key helm-map (kbd "C-h") 'delete-backward-char)
+     (helm-autoresize-mode 1))
+   (use-package helm-xref
+     :ensure t)
+   (setq xref-prompt-for-identifier '(not xref-find-definitions
+					  xref-find-definitions-other-window
+					  xref-find-definitions-other-frame
+					  xref-find-references))
+ #+END_SRC
 * dired
   #+BEGIN_SRC emacs-lisp
   (require 'dired-x)
@@ -347,7 +460,8 @@
     )
   #+END_SRC
 * web
-  #+BEGIN_SRC emacs-lisp
+** Web (To Clean)
+ #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
     :ensure t
     :config
@@ -364,19 +478,6 @@
     :config
     (add-hook 'html-mode-hook 'web-mode))
 
-  (use-package tide
-    :ensure t
-    :config
-    (defun setup-tide-mode ()
-      (interactive)
-      (tide-setup)
-      (flycheck-mode +1)
-      (setq flycheck-check-syntax-automatically '(save mode-enabled))
-      (eldoc-mode +1)
-      (tide-hl-identifier-mode +1))
-    (add-hook 'typescript-mode-hook #'setup-tide-mode)
-    (add-hook 'js-mode-hook #'setup-tide-mode)
-    (add-hook 'javascript-mode-hook #'setup-tide-mode))
 
   (use-package typescript-mode
     :ensure t
@@ -391,6 +492,49 @@
     ;; (global-set-key (kbd "C-c C-l l") 'lorem-ipsum-insert-list)
     )
   #+END_SRC
+
+** tide-mode (typescript)
+ #+BEGIN_SRC emacs-lisp
+   (use-package typescript-mode
+     :ensure t)
+   (use-package tide
+     :ensure t
+     :config
+     (defun setup-tide-mode ()
+       (interactive)
+       (tide-setup)
+       (flycheck-mode +1)
+       (eldoc-mode +1)
+       (tide-hl-identifier-mode +1))
+     (add-hook 'typescript-mode-hook #'setup-tide-mode)
+     (add-hook 'js-mode-hook #'setup-tide-mode)
+     (add-hook 'javascript-mode-hook #'setup-tide-mode))
+   (use-package prettier-js
+     :ensure t
+     :config
+     (add-hook 'typescript-mode-hook #'prettier-js-mode))
+
+
+     ;; format tslint automatically
+     (defun js-ts-indent-region-or-buffer ()
+     "Indent a region if selected, otherwise the whole buffer."
+     (interactive)
+     (save-excursion
+       (if (region-active-p)
+       (progn
+         (prettier-js)
+         (message "Format buffer."))
+     (progn
+       (prettier-js)
+       (message "Formated buffer.")))))
+
+   (add-hook 'js-mode-hook
+         (lambda () (local-set-key (kbd "C-M-\") #'js-ts-indent-region-or-buffer)))
+   (add-hook 'typescript-mode-hook
+         (lambda () (local-set-key (kbd "C-M-\") #'js-ts-indent-region-or-buffer)))
+
+ #+END_SRC
+
 * global
   #+BEGIN_SRC emacs-lisp
   ;;config files syntax
