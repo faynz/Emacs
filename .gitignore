@@ -2,7 +2,7 @@
 *
 # except subdirectories
 !*/
-!*/themes/modeline
+!themes/modeline/*
 # and all these
 !init.el
 !config.org
