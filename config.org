@@ -1,117 +1,468 @@
-* packages
-  #+BEGIN_SRC emacs-lisp
-  (defun package--save-selected-packages (&optional value)
-    "Set and save `package-selected-packages' to VALUE."
-    (when value
-      (setq package-selected-packages value)))
-  #+END_SRC
-* theme
-  #+BEGIN_SRC emacs-lisp
-  ;;; THEME ;;;
-  (load "~/.emacs.d/themes/spacemacs-common.el")
-  (load "~/.emacs.d/themes/spacemacs-dark-theme.elc")
-  (load "~/.emacs.d/themes/spacemacs-light-theme.elc")
-  (load-theme 'spacemacs-dark t)
+* Global
+** packages
+   #+BEGIN_SRC emacs-lisp
+   (defun package--save-selected-packages (&optional value)
+     "Set and save `package-selected-packages' to VALUE."
+     (when value
+       (setq package-selected-packages value)))
+   #+END_SRC
+** all the icons
+   #+BEGIN_SRC emacs-lisp
+   (use-package all-the-icons
+     :ensure t)
 
-  (defun light-mode ()
-    (interactive)
-    (load-theme 'spacemacs-light t))
+   (use-package all-the-icons-dired
+     :ensure t
+     :config
+     (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+   #+END_SRC
+** theme
+   #+BEGIN_SRC emacs-lisp
+	;;; THEME ;;;
+   (load "~/.emacs.d/themes/molokai-theme.el")
 
-  (defun dark-mode ()
-    (interactive)
-    (load-theme 'spacemacs-dark t))
+   ;;; THEME ;;;
+   (load "~/.emacs.d/themes/molokai-theme.el")
+   (load "~/.emacs.d/themes/modeline/powerline-separators.el")
+   (load "~/.emacs.d/themes/modeline/powerline-themes.el")
+   (load "~/.emacs.d/themes/modeline/powerline.el")
 
-  ;;; Colored parentesis ;;;
-  (use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
+   (load-theme 'molokai t)
+   (setq powerline-height 20)
+   (powerline-default-theme)
+
+	;;; Colored parentesis ;;;
+   (use-package rainbow-delimiters
+     :ensure t
+     :hook (prog-mode . rainbow-delimiters-mode))
 
 
-  ;;; Highlight current line ;;;
-  (global-hl-line-mode t)
-  (set-face-foreground 'highlight nil)
+	;;; Highlight current line ;;;
+   (global-hl-line-mode t)
+   (set-face-foreground 'highlight nil)
 
-  ;;; Cursor ;;;
-  (setq evil-insert-state-cursor '(box "#FFA56B")
-	evil-normal-state-cursor '(box "#61FFF2"))
-  (blink-cursor-mode 1)
-  (setq-default cursor-in-non-selected-windows nil)
+	;;; Cursor ;;;
+   (setq evil-insert-state-cursor '(box "#ff6e67")
+	 evil-normal-state-cursor '(box "#e6e6e6"))
+   (blink-cursor-mode 0)
+   (setq-default cursor-in-non-selected-windows nil)
 
-  ;;; disable bars ;;;
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+	;;; disable bars ;;;
+   (menu-bar-mode -1)
+   (tool-bar-mode -1)
+   (scroll-bar-mode -1)
 
-  ;;; Margin ;;; header line bg have to be the same as bg ;;;
-  (set-fringe-mode 25)
-  (setq-default header-line-format " ")
+	;;; Margin ;;; header line bg have to be the same as bg ;;;
+   (set-fringe-mode 25)
+   (setq-default header-line-format " ")
 
-  ;;; DEFAULT FORMAT ;;;
-  (defun mode-line-fill (face reserve)
-    (when
-	(and window-system (eq 'right (get-scroll-bar-mode)))
-      (setq reserve (- reserve 3)))
-    (propertize " "
-		'display
-		`((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
-		'face face))
+      ;;; FONT ;;;
+   (add-to-list 'default-frame-alist
+		'(font . "Monego-11"))
+   (set-fontset-font "fontset-default" '(#xf000 . #xf23a) "all-the-icons")
 
-  ;;; MODE-LINE ;;;
-  (setq-default mode-line-format
-		(list
-		 '(:eval (propertize "%b" 'face '(:weight bold)))
-		 '(:eval (if (buffer-modified-p)
-			     (propertize "  " 'face '(:foreground "#bd93f9" :weight bold))
-			   (propertize "  " 'face '(:foreground "#bd93f9" :weight bold))))
-		 '(:eval (propertize "%m" 'face '(:weight bold)))
-		 '(:eval (mode-line-fill 'mode-line 9))
-		 '(:eval (propertize "  " 'face '(:foreground "#bd93f9" :weight bold)))
-		 '(:eval (propertize "%l" 'face '(:weight bold)))))
-  (setq frame-title-format '(("[%b] %f")))
+   (setq frame-resize-pixelwise t)
 
-  ;;; FONT ;;;
-  (add-to-list 'default-frame-alist
-	       '(font . "Monego-14"))
+   (add-to-list 'default-frame-alist '(height . 81)) ;; Vertical frame size
+   (add-to-list 'default-frame-alist '(width . 150)) ;; Horizontal frame size
 
-  ;; (set-face-attribute 'default nil
-  ;; 		    :family "Monego"
-  ;; 		    :foundry "pyrs"
-  ;; 		    :height 120
-  ;; 		    :weight 'bold
-  ;; 		    :width 'normal)
+   ;; Color on compile buffer
+   (require 'ansi-color)
+   (defun my/ansi-colorize-buffer ()
+     (let ((buffer-read-only nil))
+       (ansi-color-apply-on-region (point-min) (point-max))))
+   (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+   #+END_SRC
+** beacon
+   #+BEGIN_SRC emacs-lisp
+   (use-package beacon
+     :ensure t
+     :init
+     (beacon-mode 1)
+     (global-set-key (kbd "H-s-n") 'beacon-blink))
+   #+END_SRC
+** buffers
+   #+BEGIN_SRC emacs-lisp
+   (setq-default message-log-max nil)
+   (when (get-buffer "*Messages*")
+     (kill-buffer "*Messages*"))
 
-  #+END_SRC
-* buffers
-  #+BEGIN_SRC emacs-lisp
-  (setq-default message-log-max nil)
-  (when (get-buffer "*Messages*")
-    (kill-buffer "*Messages*"))
+   ;; switch to previous buffer
+   (defun switch-to-previous-buffer ()
+     (interactive)
+     (switch-to-buffer (other-buffer)))
 
-  ;; switch to previous buffer
-  (defun switch-to-previous-buffer ()
-    (interactive)
-    (switch-to-buffer (other-buffer)))
+   (global-set-key (kbd "C-<tab>") 'switch-to-previous-buffer)
 
-  (global-set-key (kbd "C-<tab>") 'switch-to-previous-buffer)
-  #+END_SRC
-* avy
-  #+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :ensure t
-    :bind
-    ("<S-return>" . avy-goto-char-timer)
-    ("<C-return>" . avy-goto-line)
-    ("C-x y" . avy-copy-region)
-    ("C-x w" . avy-kill-region)
+   (defun dont-kill-important-buffers ()
+     "Inhibit killing of important buffers."
+     (not (member (buffer-name) '("*dashboard*" "*scratch*"))))
 
-    :config
-    (setq avy-timeout-seconds 3.0)
-    ;; Jump across different emacs buffers
-    (setq avy-all-windows 'all-frames)
-    )
-  #+END_SRC
-* evil
- #+BEGIN_SRC emacs-lisp
+   (add-hook 'kill-buffer-query-functions #'dont-kill-important-buffers)
+
+   (defun nuke-all-buffers ()
+     (interactive)
+     (mapcar 'kill-buffer (buffer-list))
+     (delete-other-windows))
+   (global-set-key (kbd "C-x K") 'nuke-all-buffers)
+
+   (defun kill-other-buffers ()
+     (interactive)
+     (dolist (buffer (buffer-list))
+       (unless (or (eql buffer (current-buffer)) )
+	 (kill-buffer buffer))))
+   (global-set-key (kbd "C-x L") 'kill-other-buffers)
+
+
+   ;; (add-hook 'compilation-finish-functions
+   ;;           (lambda (buf str)
+   ;;             (if (null (string-match ".*exited abnormally.*" str))
+   ;;                 ;;no errors, make the compilation window go away in a few seconds
+   ;;                 (progn
+   ;;                   (run-at-time
+   ;;                    "1 sec" nil 'delete-windows-on
+   ;;                    (get-buffer-create "*compilation*"))
+   ;;                   (message "No Compilation Errors!")))))
+
+   (global-set-key (kbd "H-h") 'windmove-left)
+   (global-set-key (kbd "H-l") 'windmove-right)
+   (global-set-key (kbd "H-k") 'windmove-up)
+   (global-set-key (kbd "H-j") 'windmove-down)
+
+   (global-set-key (kbd "H-M-h") 'shrink-window-horizontally)
+   (global-set-key (kbd "H-M-l") 'enlarge-window-horizontally)
+   (global-set-key (kbd "H-M-k") 'enlarge-window)
+   (global-set-key (kbd "H-M-j") 'shrink-window)
+
+   (use-package buffer-move
+   :ensure t
+     :init
+     (global-set-key (kbd "H-K")     'buf-move-up)
+     (global-set-key (kbd "H-J")   'buf-move-down)
+     (global-set-key (kbd "H-H")   'buf-move-left)
+     (global-set-key (kbd "H-L")  'buf-move-right))
+
+   (when (fboundp 'winner-mode)
+     (winner-mode 1))
+
+     (global-set-key (kbd "H-/") 'winner-undo)
+     (global-set-key (kbd "H-?") 'winner-redo)
+
+   #+END_SRC
+** global
+   #+BEGIN_SRC emacs-lisp
+   ;;config files syntax
+   (require 'generic-x)
+   (add-to-list 'auto-mode-alist '("\\rc\\'" . conf-mode))
+
+   (setq kill-buffer-query-functions nil)
+   (setq confirm-kill-processes nil)
+
+   (define-prefix-command 'cust-pref)
+   (global-set-key (kbd"C-z") 'cust-pref)
+
+   ;; (global-undo-tree-mode)
+
+   (defun open-term ()
+     "Lists the contents of the current directory."
+     (interactive)
+     (call-process "alacritty" nil 0 nil))
+
+   (defun open-terminal-in-project-root ()
+     "Open default terminal in the project root."
+     (interactive)
+     (if (projectile-project-p)
+         (let ((default-directory (projectile-project-root)))
+           (open-term))
+       (open-term)
+       ))
+
+   (global-set-key (kbd "C-x ;") 'open-term)
+   (global-set-key (kbd "C-x :") 'open-terminal-in-project-root)
+   (global-set-key (kbd "C-c c") 'recompile)
+   (global-set-key (kbd "C-c m") 'compile)
+
+   (defun open-nautilus ()
+     (interactive)
+     (call-process "nautilus" nil 0 nil "."))
+
+   (global-set-key (kbd "C-c n") 'open-nautilus)
+
+   ;;y for yes
+   (fset 'yes-or-no-p 'y-or-n-p)
+
+   ;;Rebind ibuffer
+   (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+   ;; Useful modes
+   (global-auto-revert-mode t)
+   (setq dired-auto-revert-buffer t)
+   (save-place-mode 1)
+   (show-paren-mode)
+   (setq ring-bell-function 'ignore)
+
+   ;; Not sure what this is
+   (put 'dired-find-alternate-file 'disabled nil)
+   (put 'upcase-region 'disabled nil)
+   (put 'downcase-region 'disabled nil)
+
+   ;;bars
+   (menu-bar-mode -1)
+   (tool-bar-mode -1)
+   (scroll-bar-mode -1)
+
+   ;; Disable Auto Save and Backup
+   ;; Maybe selecting a place to dumb file instead?
+   ;; (setq auto-save-default nil)
+   ;; (setq make-backup-files nil)
+   (setq create-lockfiles nil)
+   ;; (setq backup-directory-alist `(("." . "~/.saves")))
+   (setq backup-directory-alist '(("." . "~/.cache/emacs/backups")))
+   (setq auto-save-file-name-transforms
+         `((".*" "~/.cache/emacs/saves/" t)))
+
+   ;;backspace
+   (global-set-key (kbd "C-`") 'help-command)
+   (global-set-key (kbd "M-?") 'mark-paragraph)
+   (global-set-key (kbd "C-h") 'delete-backward-char)
+   (global-set-key (kbd "M-h") 'backward-kill-word)
+
+   ;;SCROLL 1 LINE
+   (global-set-key (kbd "H-d") (lambda () (interactive) (scroll-up 4)))
+   (global-set-key (kbd "H-u") (lambda () (interactive) (scroll-down 4)))
+   (global-set-key (kbd "M-n") (lambda () (interactive) (scroll-up 4)))
+   (global-set-key (kbd "M-p") (lambda () (interactive) (scroll-down 4)))
+
+   ;; Edit as root
+   (defun er-sudo-edit (&optional arg)
+     (interactive "P")
+     (if (or arg (not buffer-file-name))
+         (find-file (concat "/sudo:root@localhost:"
+                            (ido-read-file-name "Find file(as root): ")))
+       (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+   (global-set-key (kbd "C-x C-r") #'er-sudo-edit)
+
+   ;;Save on focus lost
+   (defun save-all ()
+     (interactive)
+     (save-some-buffers t))
+
+   (add-hook 'focus-out-hook 'save-all)
+   (defadvice switch-to-buffer (before save-buffer-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice projectile-find-other-file (before save-buffer-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice bookmark-jump (before save-buffer-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice other-window (before other-window-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice windmove-up (before other-window-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice windmove-down (before other-window-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice windmove-left (before other-window-now activate)
+     (when buffer-file-name (save-buffer)))
+   (defadvice windmove-right (before other-window-now activate)
+     (when buffer-file-name (save-buffer)))
+
+   ;;asm mode
+   (defun my-asm-mode-hook ()
+     ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+     (local-unset-key (vector asm-comment-char))
+     ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+     (setq tab-always-indent (default-value 'tab-always-indent)))
+
+   (add-hook 'asm-mode-hook #'my-asm-mode-hook)
+
+
+      ;;; indent buffer or region
+   (defun er-indent-buffer ()
+     "Indent the currently visited buffer."
+     (interactive)
+     (indent-region (point-min) (point-max)
+                    (delete-trailing-whitespace)))
+
+   (defun er-indent-region-or-buffer ()
+     "Indent a region if selected, otherwise the whole buffer."
+     (interactive)
+     (save-excursion
+       (if (region-active-p)
+           (progn
+             (indent-region (region-beginning) (region-end))
+             (message "Indented selected region."))
+         (progn
+           (er-indent-buffer)
+           (message "Indented buffer.")))))
+
+   (global-set-key (kbd "C-M-\\") #'er-indent-region-or-buffer)
+
+   ;; C-a better beginning of line
+   (defun smarter-move-beginning-of-line (arg)
+     (interactive "^p")
+     (setq arg (or arg 1))
+
+     ;; Move lines first
+     (when (/= arg 1)
+       (let ((line-move-visual nil))
+         (forward-line (1- arg))))
+
+     (let ((orig-point (point)))
+       (back-to-indentation)
+       (when (= orig-point (point))
+         (move-beginning-of-line 1))))
+
+   ;; remap C-a to `smarter-move-beginning-of-line'
+   (global-set-key [remap move-beginning-of-line]
+                   'smarter-move-beginning-of-line)
+
+   ;; move the line(s) spanned by the active region up/down (line transposing)
+   ;; {{{
+   (defun move-lines (n)
+     (let ((beg) (end) (keep))
+       (if mark-active
+           (save-excursion
+             (setq keep t)
+             (setq beg (region-beginning)
+                   end (region-end))
+             (goto-char beg)
+             (setq beg (line-beginning-position))
+             (goto-char end)
+             (setq end (line-beginning-position 2)))
+         (setq beg (line-beginning-position)
+               end (line-beginning-position 2)))
+       (let ((offset (if (and (mark t)
+                              (and (>= (mark t) beg)
+                                   (< (mark t) end)))
+                         (- (point) (mark t))))
+             (rewind (- end (point))))
+         (goto-char (if (< n 0) beg end))
+         (forward-line n)
+         (insert (delete-and-extract-region beg end))
+         (backward-char rewind)
+         (if offset (set-mark (- (point) offset))))
+       (if keep
+           (setq mark-active t
+                 deactivate-mark nil))))
+
+   (defun move-lines-up (n)
+     "move the line(s) spanned by the active region up by N lines."
+     (interactive "*p")
+     (move-lines (- (or n 1))))
+
+   (defun move-lines-down (n)
+     "move the line(s) spanned by the active region down by N lines."
+     (interactive "*p")
+     (move-lines (or n 1)))
+
+   (global-set-key (kbd "H-p") 'move-lines-up)
+   (global-set-key (kbd "H-n") 'move-lines-down)
+   #+END_SRC
+** openwith
+   #+BEGIN_SRC emacs-lisp
+   (use-package openwith
+     :ensure t
+     :config
+     (when (require 'openwith nil 'noerror)
+       (setq openwith-associations
+             (list
+              (list (openwith-make-extension-regexp
+                     '("mp4" "mkv"))
+                    "mpv"
+                    '(file))
+              (list (openwith-make-extension-regexp
+                     '("glade"))
+                    "glade"
+                    '(file))
+              (list (openwith-make-extension-regexp
+                     '("mp3"))
+                    "alacritty -e cmus"
+                    '(file))
+              (list (openwith-make-extension-regexp
+                     '("doc" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+                    "libreoffice"
+                    '(file))
+              (list (openwith-make-extension-regexp
+                     '("pdf" "ps" "ps.gz" "dvi"))
+                    "zathura"
+                    '(file))
+              (list (openwith-make-extension-regexp
+                     '("docx"))
+                    "libreoffice"
+                    '(file))
+
+              (list (openwith-make-extension-regexp
+                     '("xopp"))
+                    "xournalpp"
+                    '(file))
+
+              (list (openwith-make-extension-regexp
+                     '("vcd"))
+                    "gtkwave"
+                    '(file))
+              ))
+       (openwith-mode 1))
+     )
+   (setq large-file-warning-threshold nil)
+   #+END_SRC
+** org
+   #+BEGIN_SRC emacs-lisp
+   (use-package org
+     :ensure t
+     :config
+     (setq org-agenda-files (list "~/Drop/agenda.org")))
+
+   (use-package org-bullets
+     :ensure t
+     :config
+     (setq org-bullets-face-name (quote org-bullet-face))
+     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+     (setq org-bullets-bullet-list '("◉" "•" "●" "▶" "►" "▸"))
+     )
+   (define-key org-mode-map (kbd "C-c C-a") 'org-agenda)
+   (define-key org-mode-map (kbd "M-h") 'backward-kill-word)
+   (define-key org-mode-map (kbd "C-c h") 'counsel-org-goto-all)
+   (define-key org-mode-map (kbd "C-<tab>") 'switch-to-previous-buffer)
+   #+END_SRC
+** dired
+   #+BEGIN_SRC emacs-lisp
+   (require 'dired-x)
+   (setq-default dired-omit-files-p t) ; Buffer-local variable
+   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+   (add-hook 'dired-mode-hook
+	     (lambda ()
+	       (define-key dired-mode-map (kbd "M-p")
+		 (lambda () (interactive) (find-alternate-file "..")))))
+   (add-hook 'dired-mode-hook
+	     (lambda ()
+	       (dired-hide-details-mode)))
+
+
+   ;; zip files on dired mode
+   (defvar dired-compress-files-alist
+     '(("\\.tar\\.gz\\'" . "tar -c %i | gzip -c9 > %o")
+       ("\\.zip\\'" . "zip %o -r --filesync %i")))
+   #+END_SRC
+
+** avy
+   #+BEGIN_SRC emacs-lisp
+   (use-package avy
+     :ensure t
+     :config
+     (defun avy-line-saving-column ()
+     (interactive)
+     (let ((col (current-column)))
+       (avy-goto-line)
+       (move-to-column col)))
+
+     (global-set-key (kbd "S-<return>") 'avy-goto-char-2)
+     (global-set-key (kbd "C-S-l") 'avy-line-saving-column)
+     (global-set-key (kbd "C-x w") 'avy-kill-region)
+     (global-set-key (kbd "C-x y") 'avy-copy-region))
+
+   #+END_SRC
+** evil
+   #+BEGIN_SRC emacs-lisp
    (use-package evil
      :ensure t
      :init
@@ -124,21 +475,37 @@
      ;;emacs state is i state
      (setq evil-insert-state-map (make-sparse-keymap))
      (define-key evil-insert-state-map (kbd "<escape>") 'evil-normal-state)
+
      (add-to-list 'evil-emacs-state-modes 'nav-mode)
+
      (define-key evil-normal-state-map (kbd "gd") 'xref-find-definitions)
      (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
      (define-key evil-normal-state-map (kbd "M-,") 'xref-pop-marker-stack)
+
      (with-eval-after-load 'evil-maps
        (define-key evil-motion-state-map (kbd "SPC") nil)
        (define-key evil-motion-state-map (kbd "RET") nil)
        (define-key evil-motion-state-map (kbd "TAB") nil))
+
      (evil-set-initial-state 'vterm-mode 'insert)
+
      (define-key evil-motion-state-map "'" 'evil-goto-mark)
      (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
+
      (define-key evil-motion-state-map " " nil)
      (define-key evil-motion-state-map (kbd "K") 'man)
+
+     (evil-define-motion evil-avy-goto-line-keep-column (count)
+       "Evil motion for avy-goto-line, restoring column."
+       :type exclusive :jump t :repeat abort
+       (evil-without-repeat
+	 (evil-enclose-avy-for-motion
+	   (evil-save-column (avy-goto-line)))))
+     ;; goto-line motion map (example)
+
      (define-key evil-motion-state-map (kbd "g c") 'avy-goto-char-2)
-     (define-key evil-motion-state-map (kbd "g l") 'avy-line-saving-column)
+     (define-key evil-motion-state-map (kbd "g l") 'evil-avy-goto-line-keep-column)
+     ;; (define-key evil-motion-state-map (kbd "g l") 'avy-line-saving-column)
      (define-key evil-normal-state-map (kbd "SPC 1") 'delete-other-windows)
      (define-key evil-normal-state-map (kbd "SPC 2") 'split-window-below)
      (define-key evil-normal-state-map (kbd "SPC 3") 'split-window-right)
@@ -148,26 +515,41 @@
      (define-key evil-normal-state-map (kbd "SPC b") 'ivy-switch-buffer)
      (define-key evil-normal-state-map (kbd "SPC k") 'all-the-icons-ivy-rich-kill-buffer)
      (define-key evil-normal-state-map (kbd "SPC r b") 'bookmark-jump)
+     (define-key evil-normal-state-map (kbd "SPC m d") 'magit-diff-buffer-file)
+     (define-key evil-normal-state-map (kbd "SPC m f") 'magit-file-dispatch)
      (define-key evil-normal-state-map (kbd "SPC g") 'magit-status)
-     (define-key evil-normal-state-map (kbd "SPC ]") 'flycheck-next-error)
+
+     (define-key evil-normal-state-map (kbd "g r") 'lsp-find-references)
+     (define-key evil-normal-state-map (kbd "g s") 'lsp-ivy-workspace-symbol)
+     (define-key evil-normal-state-map (kbd "g S") 'lsp-ivy-global-workspace-symbol)
+     (define-key evil-normal-state-map (kbd "SPC l l") 'lsp)
+     (define-key evil-normal-state-map (kbd "SPC l e") 'lsp-treemacs-errors-list)
+     (define-key evil-normal-state-map (kbd "SPC l t") 'treemacs-find-tag)
+     (define-key evil-normal-state-map (kbd "SPC l r") 'lsp-rename)
+     (define-key evil-normal-state-map (kbd "SPC l R") 'lsp-workspace-restart)
+     (define-key evil-normal-state-map (kbd "SPC l a") 'helm-lsp-code-actions)
+     (define-key evil-normal-state-map (kbd "SPC l x") 'lsp-workspace-folders-remove)
+
      (define-key evil-normal-state-map (kbd "SPC [") 'flycheck-previous-error)
-     (define-key evil-motion-state-map (kbd "g r") 'lsp-find-references)
-     (define-key evil-motion-state-map (kbd "g s") 'lsp-ivy-workspace-symbol)
-     (define-key evil-motion-state-map (kbd "g S") 'lsp-ivy-global-workspace-symbol)
-     (define-key evil-motion-state-map (kbd "SPC l l") 'lsp)
-     (define-key evil-motion-state-map (kbd "SPC l e") 'lsp-treemacs-errors-list)
-     (define-key evil-motion-state-map (kbd "SPC l t") 'treemacs-find-tag)
-     (define-key evil-motion-state-map (kbd "SPC l r") 'lsp-rename)
-     (define-key evil-motion-state-map (kbd "SPC l R") 'lsp-workspace-restart)
-     (define-key evil-motion-state-map (kbd "SPC l a") 'helm-lsp-code-actions)
-     (define-key evil-motion-state-map (kbd "SPC l x") 'lsp-workspace-folders-remove)
+     (define-key evil-normal-state-map (kbd "SPC ]") 'flycheck-next-error)
+     (define-key evil-normal-state-map (kbd "SPC e") 'flycheck-list-errors)
+
+     (evil-define-key 'normal web-mode-map
+       (kbd "g d") 'ng2-html-goto-binding)
+
+     (evil-define-key 'normal lsp-mode-map
+       (kbd "SPC l d d") 'dap-java-debug
+       (kbd "SPC l d b") 'dap-breakpoint-toggle
+       (kbd "SPC l d h") 'dap-hydra)
+
      (evil-define-key 'normal java-mode-map
        (kbd "SPC l d d") 'dap-java-debug
        (kbd "SPC l d b") 'dap-breakpoint-toggle
        (kbd "SPC l d h") 'dap-hydra)
+
      (evil-define-key 'normal magit-mode-map
        (kbd "g c") 'avy-goto-char-2
-       (kbd "g l") 'avy-line-saving-column
+       (kbd "g l") 'evil-avy-goto-line-keep-column
        (kbd "SPC 1") 'delete-other-windows
        (kbd "SPC 2") 'split-window-below
        (kbd "SPC 3") 'split-window-right
@@ -178,10 +560,12 @@
        (kbd "SPC k") 'all-the-icons-ivy-rich-kill-buffer
        (kbd "SPC r b") 'bookmark-jump
        (kbd "SPC g") 'magit-status)
+
      (evil-define-key 'normal dired-mode-map
        (kbd "g c") 'avy-goto-char-2
-       (kbd "g l") 'avy-line-saving-column
+       (kbd "g l") 'evil-avy-goto-line-keep-column
        (kbd "g r") 'revert-buffer
+       (kbd "K") 'dired-kill-subdir
        (kbd "SPC 2") 'split-window-below
        (kbd "SPC 3") 'split-window-right
        (kbd "SPC 4 0") 'kill-buffer-and-window
@@ -191,46 +575,197 @@
        (kbd "SPC k") 'all-the-icons-ivy-rich-kill-buffer
        (kbd "SPC r b") 'bookmark-jump
        (kbd "SPC g") 'magit-status)
+
      (evil-define-key 'normal projectile-mode-map
        (kbd "SPC p") 'projectile-command-map
        (kbd "SPC TAB") 'projectile-switch-open-project
        (kbd "SPC p C-c") 'projectile-repeat-last-command)
+
      (evil-define-key 'normal xref--xref-buffer-mode-map
        (kbd "p") 'xref-prev-line
        (kbd "n") 'xref-next-line)
-     (evil-define-key 'normal flycheck-mode-map
-       (kbd "SPC e") 'flycheck-list-errors)
+
      (evil-define-key 'treemacs treemacs-mode-map
        (kbd "J") #'treemacs-find-file)
+
      (evil-define-key 'normal tide-mode-map
        (kbd "g d") 'tide-jump-to-definition
        (kbd "g r") 'xref-find-references
-       (kbd "SPC l e") 'tide-project-errors
+       (kbd "SPC t e") 'tide-project-errors
        (kbd "SPC t r") 'tide-rename-symbol
        (kbd "SPC t R") 'tide-rename-file
        (kbd "SPC t f") 'tide-fix))
+   #+END_SRC
+** undo-tree
+ #+BEGIN_SRC emacs-lisp
+   (use-package undo-tree
+     :ensure t
+     :config
+     (global-undo-tree-mode)
+     )
  #+END_SRC
-* programming
+** mc
+   #+BEGIN_SRC emacs-lisp
+   (use-package multiple-cursors
+     :ensure t
+     :config
+     (global-set-key (kbd "C-.")  'mc/mark-next-like-this)
+     (global-set-key (kbd "C-,")  'mc/mark-previous-like-this)
+     (global-set-key (kbd "C-\"")  'mc/mark-all-like-this)
+     ;; (global-set-key (kbd "M-<down>")  'mc/mark-next-word-like-this)
+     (global-set-key (kbd "C->")  'mc/skip-to-next-like-this)
+     (global-set-key (kbd "C-<")  'mc/skip-to-previous-like-this)
+     (global-set-key (kbd "C-x C-.")  'mc/unmark-next-like-this)
+     (global-set-key (kbd "C-x C-,")  'mc/unmark-previous-like-this)
+     (global-set-key (kbd "C-x C-:")  'mc/mark-pop)
+     (global-set-key (kbd "M-[")  'mc/insert-numbers)
+     (global-set-key (kbd "M-]")  'mc/insert-letters)
+     (global-set-key (kbd "C-c a")  'mc/vertical-align)
+~     (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+     
+
+
+     )
+   #+END_SRC
+** helm
+   #+BEGIN_SRC emacs-lisp
+   (use-package helm
+     :ensure t
+     :config
+     (require 'helm-config)
+     (defvar emacs-helm-display-help-buffer-regexp '("\\*.*Helm.*Help.*\\*"))
+     (defvar emacs-helm-display-buffer-regexp `("\\*.*helm.*\\*"
+						(display-buffer-in-side-window)
+						(inhibit-same-window . nil)
+						(side . bottom)
+						(window-width . 0.6)
+						(window-height . 0.4)))
+
+     (defun display-helm-at-bottom (buffer &optional _resume)
+       (let ((display-buffer-alist (list emacs-helm-display-help-buffer-regexp
+					 emacs-helm-display-buffer-regexp)))
+	 (display-buffer buffer)))
+     (setq helm-display-function 'display-helm-at-bottom)
+     (setq helm-swoop-split-window-function 'display-helm-at-bottom)
+
+     (setq use-dialog-box nil)
+     (define-key helm-map (kbd "C-h") 'delete-backward-char)
+     (helm-autoresize-mode 1))
+
+   (use-package helm-xref
+     :ensure t)
+
+   (setq xref-prompt-for-identifier '(not xref-find-definitions
+					  xref-find-definitions-other-window
+					  xref-find-definitions-other-frame
+					  xref-find-references))
+   #+END_SRC
+** ivy
+   #+BEGIN_SRC emacs-lisp
+   (use-package ivy
+     :ensure t
+     :init (ivy-mode 1)
+     :config
+     (setq ivy-height-alist
+           '((t
+              lambda (_caller)
+              (/ (frame-height) 2))))
+     (setq ivy-display-style 'fancy)
+     (setq ivy-count-format "%d/%d ")
+     (setq ivy-use-virtual-buffers t)
+
+     (setq ivy-re-builders-alist
+           '((t . ivy--regex-ignore-order)
+             (t      . ivy--regex-fuzzy)))
+
+     (setq ivy-ignore-buffers '("\\` " "\\`\\*"))
+     (global-set-key (kbd "C-c s") 'isearch-forward)
+     (global-set-key (kbd "C-s") 'swiper)
+     (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-call)
+     (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done))
+
+   (use-package all-the-icons-ivy-rich
+     :ensure t
+     :init (all-the-icons-ivy-rich-mode 1))
+
+   (use-package ivy-rich
+     :ensure t
+     :init
+     (setq ivy-rich-display-transformers-list
+           '(ivy-switch-buffer
+             (:columns
+              ((ivy-switch-buffer-transformer (:width 30))
+               (ivy-rich-switch-buffer-size (:width 7))
+               (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+               (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+               (ivy-rich-switch-buffer-project (:width 15 :face success))
+               (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+              :predicate
+              (lambda (cand) (get-buffer cand)))
+             counsel-find-file
+             (:columns
+              ((ivy-read-file-transformer)
+               (ivy-rich-counsel-find-file-truename (:face font-lock-doc-face))))
+             counsel-M-x
+             (:columns
+              ((counsel-M-x-transformer (:width 70))
+               (ivy-rich-counsel-function-docstring (:face font-lock-doc-face)))) ; return docstring of the command
+             counsel-describe-function
+             (:columns
+              ((counsel-describe-function-transformer (:width 40))
+               (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))  ; return docstring of the function
+             counsel-describe-variable
+             (:columns
+              ((counsel-describe-variable-transformer (:width 40))
+               (ivy-rich-counsel-variable-docstring (:face font-lock-doc-face))))  ; return docstring of the variable
+             counsel-recentf
+             (:columns
+              ((ivy-rich-candidate (:width 0.8))
+               (ivy-rich-file-last-modified-time (:face font-lock-comment-face))))  ; return last modified time of the file
+             package-install
+             (:columns
+              ((ivy-rich-candidate (:width 30))
+               (ivy-rich-package-version (:width 16 :face font-lock-comment-face))  ; return package version
+               (ivy-rich-package-archive-summary (:width 7 :face font-lock-builtin-face))  ; return archive summary
+               (ivy-rich-package-install-summary (:face font-lock-doc-face))))))
+
+     :config
+     (ivy-rich-mode 1)
+     (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+   #+END_SRC
+** counsel
+   #+BEGIN_SRC emacs-lisp
+   (use-package counsel
+     :ensure t
+     :config
+     (setq counsel-find-file-ignore-regexp "\\`\\.")
+     (setq ivy-initial-inputs-alist nil)
+     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+     (global-set-key (kbd "M-x") 'counsel-M-x)
+     (global-set-key (kbd "C-x l") 'counsel-locate))
+   #+END_SRC
 ** projectile
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package projectile
       :ensure t
       :config
       (projectile-global-mode 1)
+
       (setq projectile-completion-system 'ivy)
       (put 'projectile-project-compilation-dir 'safe-local-variable (lambda (_) t))
       (setq projectile-switch-project-action #'counsel-projectile-switch-to-buffer)
       ;; (put 'projectile-project-compilation-cmd 'safe-local-variable (lambda (_) t))
       (add-to-list 'safe-local-variable-values '(projectile-project-compilation-cmd . "make")))
-  #+END_SRC
+   #+END_SRC
 ** counsel-projectile
- #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
    (use-package counsel-projectile
      :after counsel
      :ensure t
      :config
      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
      (define-key counsel-mode-map (kbd "C-j") 'ivy-call)
+
      (defun counsel-projectile-switch-to-buffer ()
        "Jump to a buffer in the current project."
        (interactive)
@@ -249,91 +784,70 @@
                    :action counsel-projectile-switch-to-buffer-action
                    :keymap counsel-projectile-switch-to-buffer-map
                    :caller 'counsel-projectile-switch-to-buffer)))
+
      (ivy-configure 'counsel-projectile-switch-to-buffer
        :display-transformer-fn #'counsel-projectile-switch-to-buffer-transformer)
+
      (counsel-projectile-mode))
- #+END_SRC
-** prog-styles
-   #+BEGIN_SRC emacs-lisp
-   (defun c-setup-comment ()
-	 (setq comment-start "/*"
-		   comment-end   "*/"
-		   comment-multi-line t
-		   comment-continue " *"
-		   comment-padding 1
-		   comment-style 'extra-line)
-	 )
-
-   (setq c-default-style
-		 '((java-mode . "java")
-		   (awk-mode . "awk")
-		   (c-mode . "linux")
-		   (other . "linux")))
-
-   (defun c-setup ()
-	 (c-setup-comment)
-	 )
-
-
-   (add-hook 'c-mode-common-hook 'c-setup)
-   (add-hook 'c-mode-hook 'c-setup)
-   (add-hook 'c++-mode-common-hook 'c-setup)
-   (add-hook 'c++-mode-hook 'c-setup)
-
    #+END_SRC
-** ide-features
-*** eclim
-    #+BEGIN_SRC emacs-lisp
-    (use-package eclim
-      :ensure t
-      :config
-      (add-hook 'java-mode-hook 'eclim-mode)
-      (setq eclim-auto-save t)
-      (setq eclimd-default-workspace "/run/media/bndo/USB/school/lab/inf2010/workspace")
-      (setq eclimd-autostart t)
-      (global-set-key (kbd "C-c C-e e") 'eclim-problems-show-errors)
-      (global-set-key (kbd "C-c C-e c") 'eclim-problems-correct)
-      )
-    #+END_SRC
-*** company
-    #+BEGIN_SRC emacs-lisp
-    (use-package company-jedi
-      :ensure t
-      )
-    (use-package company-emacs-eclim
-      :ensure t
-      )
-    (use-package company-c-headers
-      :ensure t
-      )
-    (use-package company
-      :ensure t
-      :config
-      (setq company-minimum-prefix-length 1)
-      (setq company-idle-delay 0.5)
-      (global-company-mode 1)
-      (global-set-key (kbd "<backtab>") 'company-complete)
+** vterm
+   #+BEGIN_SRC emacs-lisp
+  (use-package vterm
+    :ensure t
+    :config
+    (add-hook 'vterm-mode-hook (lambda ()
+                                 (local-set-key (kbd "C-h") 'vterm-send-backspace)
+                                 (local-set-key (kbd "C-s") 'swiper)
+                                 (setq-local global-hl-line-mode nil))))
 
-      :init
-      ;; Default Back Ends
-      (setq company-backends
-	    '((
-	       company-files
-	       company-keywords
-	       company-capf
-	       company-jedi
-	       company-yasnippet
-	       company-emacs-eclim
-	       ))
-	    )
-      )
-    #+END_SRC
-*** cedet
-    #+BEGIN_SRC emacs-lisp
-    ;; (semantic-add-system-include "/usr/include/c++/9.2.0" 'c++-mode)
-    (add-hook 'c++-mode-hook 'semantic-mode)
-    (add-hook 'c-mode-hook 'semantic-mode)
-    #+END_SRC
+  (defun projectile-vterm (&optional arg)
+    (interactive "P")
+    (if (projectile-project-p)
+        (let* ((project (projectile-project-root)))
+          (unless (require 'vterm nil 'noerror)
+            (error "Package 'vterm' is not available"))
+          (projectile-with-default-dir project
+            (vterm)))
+      (unless (require 'vterm nil 'noerror)
+        (error "Package 'vterm' is not available"))
+      (vterm)))
+
+  (global-set-key (kbd "M-V") 'projectile-vterm)
+   #+END_SRC
+** magit
+   #+BEGIN_SRC emacs-lisp
+   (defadvice vc-mode-line (after strip-backend () activate)
+     (when (stringp vc-mode)
+       (let ((noback (replace-regexp-in-string
+		      "^ Git-\\|Git:"
+		      "  " vc-mode)))
+	 (setq vc-mode noback))))
+
+   (setq auto-revert-check-vc-info t)
+
+   (use-package magit
+     :ensure t
+     :bind
+     ("C-x g" . magit-status)
+     :init
+     :config
+     (global-magit-file-mode)
+     (setq magit-refresh-status-buffer t)
+     )
+
+   (use-package evil-magit
+     :after magit evil
+     :ensure t)
+
+   (defun ediff-copy-both-to-C ()
+     (interactive)
+     (ediff-copy-diff ediff-current-difference nil 'C nil
+		      (concat
+		       (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+		       (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+   (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+   (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
+   #+END_SRC
 ** smartparens
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens
@@ -343,21 +857,207 @@
        (global-set-key (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
        (setq sp-escape-quotes-after-insert nil)
 
-       (defun my-create-newline-and-allman-format (&rest _ignored)
-	 "Allman-style formatting for C."
-	 (interactive)
-	 (progn
-	   (newline-and-indent)
-	   (previous-line) (previous-line) (search-forward "{")
-	   (next-line) (indent-according-to-mode)))
-       (sp-local-pair '(java-mode) "{" nil :post-handlers '((my-create-newline-and-allman-format "RET")))
-       (sp-local-pair '(c-mode) "{" nil :post-handlers '((my-create-newline-and-allman-format "RET")))
-       (sp-local-pair '(c++-mode) "{" nil :post-handlers '((my-create-newline-and-allman-format "RET")))
+       (defun my-fancy-newline ()
+         "Add two newlines and put the cursor at the right indentation
+          between them if a newline is attempted when the cursor is between
+          two curly braces, otherwise do a regular newline and indent"
+         (interactive)
+         (if (and (equal (char-before) 123) ; {
+                  (equal (char-after) 125)) ; }
+             (progn (newline-and-indent)
+                    (split-line)
+                    (indent-for-tab-command))
+           (newline-and-indent)))
 
+       (global-set-key (kbd "C-m") 'my-fancy-newline)
+
+     )
+   #+END_SRC
+
+** pdfgrep
+   #+BEGIN_SRC emacs-lisp
+     (use-package pdfgrep
+       :ensure t
+       :config
+       (pdfgrep-mode))
+   #+END_SRC
+
+** whichkey
+   #+BEGIN_SRC emacs-lisp
+   ;; Shows possible suffix keys
+   (use-package which-key
+     :ensure t
+     :config
+     (which-key-mode)
+   )
+   #+END_SRC
+* Editing
+** company
+   #+BEGIN_SRC emacs-lisp
+   (use-package company
+     :ensure t
+     :config
+     (setq company-minimum-prefix-length 1)
+     (setq company-idle-delay 0)
+     (global-company-mode 1)
+     (setq company-selection-wrap-around t)
+     (global-set-key (kbd "<backtab>") 'company-complete)
+     (setq company-global-modes '(not gud-mode shell-mode))
+     (use-package company-jedi
+       :ensure t
        )
+     (use-package company-auctex
+       :ensure t
+       ))
+   #+END_SRC
+** counsel-company
+   #+BEGIN_SRC emacs-lisp
+   (use-package counsel
+     :ensure t
+     :config
+     (global-set-key (kbd "C-:") 'counsel-company))
+
+   #+END_SRC
+** flycheck
+   #+BEGIN_SRC emacs-lisp
+   (use-package flycheck
+     :ensure t)
+
+   (use-package flycheck-inline
+     :ensure t
+     :config
+     (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+   #+END_SRC
+** yasnippet
+   #+BEGIN_SRC emacs-lisp
+   (use-package yasnippet
+     :ensure t
+     :config
+     (yas-global-mode 1)
+     )
+   (use-package yasnippet-snippets
+     :ensure t
+     )
+   #+END_SRC
+
+** progmodes
+   #+BEGIN_SRC emacs-lisp
+   ;; (defun c-setup-comment ()
+   ;;   (setq comment-start "/*"
+   ;;         comment-end   "*/"
+   ;;         comment-multi-line t
+   ;;         comment-continue " *"
+   ;;         comment-padding 1
+   ;;         comment-style 'extra-line)
+   ;;   )
+
+   ;; (defun c-setup ()
+   ;; (c-setup-comment)
+   ;; )
+
+   ;; (c-add-style "work"
+   ;;        '((indent-tabs-mode . nil)
+   ;;          (c-basic-offset . 4)
+   ;;          (c-offsets-alist
+   ;;           (inclass . 4)
+   ;;           (innamespace . 0))))
+
+   (defun c-er-indent-region-or-buffer ()
+     "Indent a region if selected, otherwise the whole buffer."
+     (interactive)
+     (save-excursion
+       (if (region-active-p)
+	   (progn
+	     (lsp-format-region (region-beginning) (region-end))
+	     (message "Indented selected region."))
+	 (progn
+	   (lsp-format-buffer)
+	   (message "Indented buffer.")))))
+
+   (add-hook 'c-mode-hook
+	     (lambda () (local-set-key (kbd "C-M-\\") #'c-er-indent-region-or-buffer)))
+   (add-hook 'c++-mode-hook
+	     (lambda () (local-set-key (kbd "C-M-\\") #'c-er-indent-region-or-buffer)))
+
+   (defun js-ts-indent-region-or-buffer ()
+     "Indent a region if selected, otherwise the whole buffer."
+     (interactive)
+     (save-excursion
+       (if (region-active-p)
+	   (progn
+	     (prettier-js)
+	     (message "Format buffer."))
+	 (progn
+	   (prettier-js)
+	   (message "Formated buffer.")))))
+
+   (add-hook 'js-mode-hook
+	     (lambda () (local-set-key (kbd "C-M-\\") #'js-ts-indent-region-or-buffer)))
+   (add-hook 'typescript-mode-hook
+	     (lambda () (local-set-key (kbd "C-M-\\") #'js-ts-indent-region-or-buffer)))
+
+
+   (c-add-style "microsoft"
+		'("stroustrup"
+		  (c-offsets-alist
+		   (innamespace . -)
+		   (inline-open . 0)
+		   (inher-cont . c-lineup-multi-inher)
+		   (arglist-cont-nonempty . +)
+		   (template-args-cont . +))))
+
+   (setq-default c-default-style
+		 '((java-mode . "java")
+		   (awk-mode . "awk")
+		   (c++-mode . "microsoft")
+		   (c-mode . "linux")
+		   (others . "linux")))
+
+   (c-set-offset 'case-label '+)
+
+
+   (defun untabify-buffer ()
+     "Untabify current buffer"
+     (interactive)
+     (untabify (point-min) (point-max)))
+
+   (defun progmodes-hooks ()
+     "Hooks for programming modes"
+     (add-hook 'before-save-hook 'progmodes-write-hooks nil 'local))
+
+   (defun progmodes-write-hooks ()
+     "Hooks which run on file write for programming modes"
+     (prog1 nil
+       (untabify-buffer)
+       (delete-trailing-whitespace)))
+
+   (add-hook 'c++-mode-hook 'progmodes-hooks)
+   (add-hook 'html-mode-hook 'progmodes-hooks)
+   (add-hook 'sgml-mode-hook 'progmodes-hooks)
+   (add-hook 'javascript-mode-hook 'progmodes-hooks)
+   (add-hook 'typescript-mode-hook 'progmodes-hooks)
+   (add-hook 'c-mode-hook 'progmodes-hooks)
+   (add-hook 'java-mode-hook 'progmodes-hooks)
+
+   (defun project-indentation (n)
+     (setq-default typescript-indent-level n) ; javascript-mode
+     (setq-default javascript-indent-level n) ; javascript-mode
+     (setq-default js-indent-level n) ; js-mode
+     (setq-default js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+     (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
+     (setq web-mode-css-indent-offset n) ; web-mode, css in html file
+     (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
+     (setq-default css-indent-offset n) ; css-mode
+     )
+   (project-indentation 4)
+   #+END_SRC
+** golang
+   #+BEGIN_SRC emacs-lisp
+   (use-package go-mode
+     :ensure t)
    #+END_SRC
 ** lsp (c/c++, python, java, go)
- #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
    (use-package lsp-mode
      :ensure t
      ;; set prefix for lsp-command-keymap
@@ -373,128 +1073,64 @@
      (setq-default lsp-enable-indentation nil)
      (setq-default lsp-enable-on-type-formatting nil)
      )
+
    (use-package lsp-java
      :after lsp
      :ensure t)
+
    (use-package helm-lsp
      :after helm lsp
      :ensure t)
-
-
-     ;; Format C/C++ 
-     (defun c-er-indent-region-or-buffer ()
-     "Indent a region if selected, otherwise the whole buffer."
-     (interactive)
-     (save-excursion
-       (if (region-active-p)
-       (progn
-         (lsp-format-region (region-beginning) (region-end))
-         (message "Indented selected region."))
+   #+END_SRC
+** ivy-lsp
+   #+BEGIN_SRC emacs-lisp
+   (use-package lsp-ivy
+     :ensure t
+     :config)
+   #+END_SRC
+** cmake-mode
+   #+BEGIN_SRC emacs-lisp
+   (use-package cmake-mode
+     :ensure t)
+   #+END_SRC
+** treemacs
+   #+BEGIN_SRC emacs-lisp
+   (use-package treemacs
+     :ensure t
+     :defer t
+     :init
+     :config
      (progn
-       (lsp-format-buffer)
-       (message "Indented buffer.")))))
+       (treemacs-follow-mode t)
+       (treemacs-filewatch-mode t)
+       (treemacs-fringe-indicator-mode t))
 
-   (add-hook 'c-mode-hook
-         (lambda () (local-set-key (kbd "C-M-\") #'c-er-indent-region-or-buffer)))
-   (add-hook 'c++-mode-hook
-         (lambda () (local-set-key (kbd "C-M-\") #'c-er-indent-region-or-buffer)))
+     :bind
+     (:map global-map
+           ("M-0"       . treemacs-select-window)
+           ("C-x t 1"   . treemacs-delete-other-windows)
+           ("C-x t t"   . treemacs)
+           ("C-x t c"   . treemacs-add-and-display-current-project)
+           ("C-x t B"   . treemacs-bookmark)
+           ("C-x t C-t" . treemacs-find-file)
+           ("C-x t M-t" . treemacs-find-tag)))
 
- #+END_SRC
-** helm
- #+BEGIN_SRC emacs-lisp
-   (use-package helm
+   (use-package treemacs-evil
+     :after treemacs evil
      :ensure t
      :config
-     (require 'helm-config)
-     (defvar emacs-helm-display-help-buffer-regexp '("\\*.*Helm.*Help.*\\*"))
-     (defvar emacs-helm-display-buffer-regexp `("\\*.*helm.*\\*"
-						(display-buffer-in-side-window)
-						(inhibit-same-window . nil)
-						(side . bottom)
-						(window-width . 0.6)
-						(window-height . 0.4)))
-     (defun display-helm-at-bottom (buffer &optional _resume)
-       (let ((display-buffer-alist (list emacs-helm-display-help-buffer-regexp
-					 emacs-helm-display-buffer-regexp)))
-	 (display-buffer buffer)))
-     (setq helm-display-function 'display-helm-at-bottom)
-     (setq helm-swoop-split-window-function 'display-helm-at-bottom)
-     (setq use-dialog-box nil)
-     (define-key helm-map (kbd "C-h") 'delete-backward-char)
-     (helm-autoresize-mode 1))
-   (use-package helm-xref
+     )
+
+   (use-package treemacs-projectile
+     :after treemacs projectile
      :ensure t)
-   (setq xref-prompt-for-identifier '(not xref-find-definitions
-					  xref-find-definitions-other-window
-					  xref-find-definitions-other-frame
-					  xref-find-references))
- #+END_SRC
-* dired
-  #+BEGIN_SRC emacs-lisp
-  (require 'dired-x)
-  (setq-default dired-omit-files-p t) ; Buffer-local variable
-  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
-  (add-hook 'dired-mode-hook
-	    (lambda ()
-	      (define-key dired-mode-map (kbd "M-p")
-			  (lambda () (interactive) (find-alternate-file "..")))))
 
-  (defun dc/dired-mode-keys ()
-    "User defined keys for dired mode."
-    (interactive)
-    (local-set-key (kbd "K") 'dired-kill-subdir)
-    )
-  (add-hook 'dired-mode-hook 'dc/dired-mode-keys)
-  ;;dired only showing file name
-  (add-hook 'dired-mode-hook
-	    (lambda ()
-	      (dired-hide-details-mode)))
-  ;;preview files in dired
-  (use-package peep-dired
-    :ensure t
-    :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
-    :bind (:map dired-mode-map
-		("P" . peep-dired))
-    :config
-    (setq peep-dired-cleanup-on-disable t)
-    )
-  #+END_SRC
-* web
-** Web (To Clean)
- #+BEGIN_SRC emacs-lisp
-  (use-package emmet-mode
-    :ensure t
-    :config
-    (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-    (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-    (add-hook 'html-mode-hook 'emmet-mode)
-    )
-
-    ;; emmet-mode-map won't work (it's keymap instead)
-    (define-key emmet-mode-keymap (kbd "<C-return>") 'avy-goto-line) ;; remove emmet-expand-line shortcut and replace
-
-  (use-package web-mode
-    :ensure t
-    :config
-    (add-hook 'html-mode-hook 'web-mode))
-
-
-  (use-package typescript-mode
-    :ensure t
-    )
-
-  (use-package lorem-ipsum
-    :ensure t
-    :config
-    (lorem-ipsum-use-default-bindings)
-    ;; (global-set-key (kbd "C-c C-l s") 'lorem-ipsum-insert-sentences)
-    ;; (global-set-key (kbd "C-c C-l p") 'lorem-ipsum-insert-paragraphs)
-    ;; (global-set-key (kbd "C-c C-l l") 'lorem-ipsum-insert-list)
-    )
-  #+END_SRC
-
+   (use-package lsp-treemacs
+     :after lsp treemacs
+     :ensure t)
+   #+END_SRC
 ** tide-mode (typescript)
- #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
    (use-package typescript-mode
      :ensure t)
    (use-package tide
@@ -513,668 +1149,31 @@
      :ensure t
      :config
      (add-hook 'typescript-mode-hook #'prettier-js-mode))
-
-
-     ;; format tslint automatically
-     (defun js-ts-indent-region-or-buffer ()
-     "Indent a region if selected, otherwise the whole buffer."
-     (interactive)
-     (save-excursion
-       (if (region-active-p)
-       (progn
-         (prettier-js)
-         (message "Format buffer."))
-     (progn
-       (prettier-js)
-       (message "Formated buffer.")))))
-
-   (add-hook 'js-mode-hook
-         (lambda () (local-set-key (kbd "C-M-\") #'js-ts-indent-region-or-buffer)))
-   (add-hook 'typescript-mode-hook
-         (lambda () (local-set-key (kbd "C-M-\") #'js-ts-indent-region-or-buffer)))
-
- #+END_SRC
-
-* global
-  #+BEGIN_SRC emacs-lisp
-  ;;config files syntax
-  (require 'generic-x)
-  (add-to-list 'auto-mode-alist '("\\rc\\'" . conf-mode))
-
-  (define-prefix-command 'cust-pref)
-  (global-set-key (kbd"C-z") 'cust-pref)
-
-  (defun open-term ()
-    "Lists the contents of the current directory."
-    (interactive)
-    (call-process "alacritty" nil 0 nil))
-
-  (defun open-terminal-in-project-root ()
-    "Open default terminal in the project root."
-    (interactive)
-    (if (projectile-project-p)
-	(let ((default-directory (projectile-project-root)))
-	  (open-term))
-      (open-term)
-      ))
-  (global-set-key (kbd "C-x :") 'open-terminal-in-project-root)
-  (global-set-key (kbd "C-c c") 'recompile)
-  (global-set-key (kbd "C-c m") 'compile)
-
-  (defun open-nautilus ()
-    "Lists the contents of the current directory."
-    (interactive)
-    (call-process "nautilus" nil 0 nil "."))
-
-  (global-set-key (kbd "C-c n") 'open-nautilus)
-
-  ;;y for yes
-  (fset 'yes-or-no-p 'y-or-n-p)
-
-  ;;Rebind isearch
-  (global-set-key (kbd "C-c s") 'isearch-forward)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
-
-  ;; Useful modes
-  (global-auto-revert-mode t)
-  (setq dired-auto-revert-buffer t)
-  (save-place-mode 1)
-  (add-hook 'text-mode-hook 'orgtbl-mode)
-  (show-paren-mode)
-  (setq-default show-trailing-whitespace t)
-  (setq-default show-ws-toggle-show-tabs t)
-
-  ;; Not sure what this is
-  (put 'dired-find-alternate-file 'disabled nil)
-  (put 'upcase-region 'disabled nil)
-  (put 'downcase-region 'disabled nil)
-
-  ;;bars
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-
-  ;; Disable Auto Save and Backup
-  ;; Maybe selecting a place to dumb file instead?
-  (setq auto-save-default nil)
-  (setq make-backup-files nil)
-  (setq create-lockfiles nil)
-  (setq backup-directory-alist `(("." . "~/.saves")))
-
-  ;;WINDMOVE
-  ;; (when (fboundp 'windmove-default-keybindings)
-  ;; (windmove-default-keybindings))
-  (global-set-key (kbd "C-s-h")  'windmove-left)
-  (global-set-key (kbd "C-s-l") 'windmove-right)
-  (global-set-key (kbd "C-s-k")    'windmove-up)
-  (global-set-key (kbd "C-s-j")  'windmove-down)
-
-  ;;eval and replace
-  (defun replace-last-sexp ()
-    (interactive)
-    (let ((value (eval (preceding-sexp))))
-      (kill-sexp -1)
-      (insert (format "%S" value))))
-
-  (global-set-key (kbd "C-c e") 'replace-last-sexp)
-
-  ;;backspace
-  (global-set-key (kbd "C-~") 'help-command)
-  (global-set-key (kbd "M-?") 'mark-paragraph)
-  (global-set-key (kbd "C-h") 'delete-backward-char)
-  (global-set-key (kbd "M-h") 'backward-kill-word)
-  (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
-
-  ;;SCROLL 1 LINE
-  (global-set-key (kbd "M-n") (lambda () (interactive) (scroll-up 4)))
-  (global-set-key (kbd "M-p") (lambda () (interactive) (scroll-down 4)))
-  (global-set-key (kbd "M-<down>") (lambda () (interactive) (scroll-up 2)))
-  (global-set-key (kbd "M-<up>") (lambda () (interactive) (scroll-down 2)))
-  ;; (global-set-key (quote [M-down]) (quote scroll-up-line))
-  ;; (global-set-key (quote [M-up]) (quote scroll-down-line))
-
-  ;; Edit as root
-  (defun er-sudo-edit (&optional arg)
-    (interactive "P")
-    (if (or arg (not buffer-file-name))
-	(find-file (concat "/sudo:root@localhost:"
-			   (ido-read-file-name "Find file(as root): ")))
-      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-  (global-set-key (kbd "C-x C-r") #'er-sudo-edit)
-
-  ;;Save on focus lost
-  (defun save-all ()
-    (interactive)
-    (save-some-buffers t))
-
-  (add-hook 'focus-out-hook 'save-all)
-  (defadvice switch-to-buffer (before save-buffer-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice projectile-find-other-file (before save-buffer-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice bookmark-jump (before save-buffer-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice other-window (before other-window-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice windmove-up (before other-window-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice windmove-down (before other-window-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice windmove-left (before other-window-now activate)
-    (when buffer-file-name (save-buffer)))
-  (defadvice windmove-right (before other-window-now activate)
-    (when buffer-file-name (save-buffer)))
-
-  ;;asm mode
-  (defun my-asm-mode-hook ()
-    ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
-    (local-unset-key (vector asm-comment-char))
-    ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-    (setq tab-always-indent (default-value 'tab-always-indent)))
-
-  (add-hook 'asm-mode-hook #'my-asm-mode-hook)
-
-
-  ;;Move paragraphs
-  (defun move-text-internal (arg)
-    (cond
-     ((and mark-active transient-mark-mode)
-      (if (> (point) (mark))
-	  (exchange-point-and-mark))
-      (let ((column (current-column))
-	    (text (delete-and-extract-region (point) (mark))))
-	(forward-line arg)
-	(move-to-column column t)
-	(set-mark (point))
-	(insert text)
-	(exchange-point-and-mark)
-	(setq deactivate-mark nil)))
-     (t
-      (beginning-of-line)
-      (when (or (> arg 0) (not (bobp)))
-	(forward-line)
-	(when (or (< arg 0) (not (eobp)))
-	  (transpose-lines arg))
-	(forward-line -1)))))
-
-  (defun move-text-down (arg)
-    "Move region (transient-mark-mode active) or current line
-      arg lines down."
-    (interactive "*p")
-    (move-text-internal arg))
-
-  (defun move-text-up (arg)
-    "Move region (transient-mark-mode active) or current line
-      arg lines up."
-    (interactive "*p")
-    (move-text-internal (- arg)))
-
-  (global-set-key [\M-\S-up] 'move-text-up)
-  (global-set-key [\M-\S-down] 'move-text-down)
-
-  ;;; indent buffer or region
-  (defun er-indent-buffer ()
-    "Indent the currently visited buffer."
-    (interactive)
-    (indent-region (point-min) (point-max)
-    (delete-trailing-whitespace)))
-
-  (defun er-indent-region-or-buffer ()
-    "Indent a region if selected, otherwise the whole buffer."
-    (interactive)
-    (save-excursion
-      (if (region-active-p)
-	  (progn
-	    (indent-region (region-beginning) (region-end))
-	    (message "Indented selected region."))
-	(progn
-	  (er-indent-buffer)
-	  (message "Indented buffer.")))))
-
-  (global-set-key (kbd "C-M-\\") #'er-indent-region-or-buffer)
-
-  ;; zip files on dired mode
-  (defvar dired-compress-files-alist
-    '(("\\.tar\\.gz\\'" . "tar -c %i | gzip -c9 > %o")
-      ("\\.zip\\'" . "zip %o -r --filesync %i"))
-    "Control the compression shell command for `dired-do-compress-to'.
-
-  Each element is (REGEXP . CMD), where REGEXP is the name of the
-  archive to which you want to compress, and CMD the the
-  corresponding command.
-
-  Within CMD, %i denotes the input file(s), and %o denotes the
-  output file. %i path(s) are relative, while %o is absolute.")
-  #+END_SRC
-* ace-window
-  #+BEGIN_SRC emacs-lisp
- (use-package ace-window
-   :ensure t
-   :config
-   (global-set-key (kbd "C-c a") 'ace-window)
-   )
-
-  #+END_SRC
-
-* hydra
-  #+BEGIN_SRC emacs-lisp
-  (use-package hydra
-    :ensure t
-    :config
-
-    (defhydra hydra-zoom (global-map "<f2>")
-      "zoom"
-      ("g" text-scale-increase "in")
-      ("l" text-scale-decrease "out"))
-
-    )
-
-  (use-package ivy-hydra
-    :ensure t
-    :after (ivy hydra)
-
-    :bind
-    ("C-c w" . hydra-window/body)
-    ("C-c p" . hydra-projectile/body)
-    ("C-c g" . hydra-gtags/body)
-
-    :config
-    (defhydra hydra-window (:color amaranth)
-      "
-  Hydra Window
-
-  ^Size^                    ^Actions^            ^Split^
-  ^^^^^^^------------------------------------------------------------
-  _e_nlarge Horizontally    _d_elete             _v_ertically
-  _E_nlarge Vertically      _D_elete Others      _h_orizontally
-  _s_hrink Horizontally     _o_: Other
-  _S_hrink Vertically
-  _M_aximize
-  _m_inimize
-  _b_alance
-
-  "
-      ("v" split-window-vertically)
-      ("h" split-window-horizontally)
-      ("e" enlarge-window-horizontally)
-      ("E" enlarge-window)
-      ("s" shrink-window-horizontally)
-      ("S" shrink-window)
-      ("M" maxize-window)
-      ("m" minimize-window)
-      ("b" balance-windows)
-      ("d" delete-window)
-      ("D" delete-other-windows)
-      ("o" other-window)
-      ("q" nil "quit" :blue t))
-
-    (defhydra hydra-projectile (:color teal)
-      "
-  Hydra Projectile
-
-  ^Find^        ^Actions^      ^Buffer
-  p^^^^^--------------------------------------
-  _p_roject     _g_rep         _k_ill
-  _f_ile        _G_it
-  _d_ir         _c_ompile
-  _t_ag         _r_eplace
-  _o_ther       _R_egex
-  ^ ^           _s_hell
-
-  "
-      ("p" counsel-projectile-switch-project)
-      ("f" counsel-projectile-find-file)
-      ("d" counsel-projectile-find-dir)
-      ("t" projectile-find-tag)
-      ("o" projectile-find-other-file)
-      ("g" counsel-projectile-grep)
-      ("G" counsel-projectile-git-grep)
-      ("c" projectile-compile-project)
-      ("r" projectile-replace)
-      ("R" projectile-replace-regexp)
-      ("s" projectile-run-shell)
-      ("k" projectile-kill-buffers)
-      ("q" nil "quit")
-      )
-
-
-    (defhydra hydra-gtags (:color amaranth)
-      "
-  Hydra Gtags
-
-  ^Search^        ^Tags^     ^Goto^
-  ^^^^^^^------------------------------------------------------------
-  _d_efinitions   _c_reate   _p_op
-  _r_eference     _u_ptade
-  _s_ymbols
-  _f_iles
-  _D_wim
-
-  "
-
-      ("d" counsel-gtags-find-definition)
-      ("r" counsel-gtags-find-reference)
-      ("s" counsel-gtags-find-symbol)
-      ("f" counsel-gtags-find-file)
-      ("D" counsel-gtags-dwim)
-      ;; There's a bug in counsel-gtags. Use pop instead
-      ;;    ("b" counsel-gtags-go-backward)
-      ;;    ("f" counsel-gtags-go-forward)
-      ("p" counsel-gtags-pop)
-      ("c" counsel-gtags-create-tags)
-      ("u" counsel-gtags-update-tags)
-      ("q" nil "quit" :blue t)
-      )
-    )
-  #+END_SRC
-* ivy
-  #+BEGIN_SRC emacs-lisp
-  (defun ivy-view-backtrace ()
-    (interactive)
-    (switch-to-buffer "*ivy-backtrace*")
-    (delete-region (point-min) (point-max))
-    (fundamental-mode)
-    (insert ivy-old-backtrace)
-    (goto-char (point-min))
-    (forward-line 1)
-    (let (part parts)
-      (while (< (point) (point-max))
-	(condition-case nil
-	    (progn
-	      (setq part (read (current-buffer)))
-	      (push part parts)
-	      (delete-region (pont-min) (point)))
-	  (error
-	   (progn
-	     (ignore-errors (up-list))
-	     (delete-region (point-min) (point)))))))
-    (goto-char (point-min))
-    (dolist (part parts)
-      (lispy--insert part)
-      (lispy-alt-multiline)
-      (insert "\n")))
-
-  (defmacro csetq (variable value)
-    `(funcall (or (get ',variable 'custom-set)
-		  'set-default)
-	      ',variable ,value))
-
-
-  (use-package ivy
-    :ensure t
-    :bind(
-	  ("C-s" . swiper)
-	  ("C-c C-r" . ivy-resume)
-	  ("C-x b" .  ivy-switch-buffer)
-	  :map ivy-minibuffer-map
-	  ("M-<return>" . ivy-alt-done)
-	  ("C-M-h" . ivy-previous-line-and-call)
-	  ("C-c o" . ivy-occur)
-
-	  :map ivy-switch-buffer-map
-	  ("C-k" . ivy-switch-buffer-kill)
-	  )
-
-    :init
-    (csetq ivy-display-style 'fancy)
-    ;; (csetq ivy-count-format "(%d/%d) ")
-    (csetq ivy-use-virtual-buffers t)
-    (csetq counsel-find-file-ignore-regexp "\\`\\.")
-
-    (setq ivy-initial-inputs-alist nil)
-    (setq ivy-switch-buffer-faces-alist
-	  '((emacs-lisp-mode . swiper-match-face-1)
-	    (dired-mode . ivy-subdir)
-	    (org-mode . org-level-4)))
-
-    (setq ivy-re-builders-alist
-	  '((t . ivy--regex-ignore-order)))
-    (setq ivy-ignore-buffers '("\\` " "\\`\\*"))
-    :config
-    (ivy-mode 1)
-    )
-
-
-
-  (use-package counsel
-    :ensure t
-    :bind(
-	  ("M-C-y" . counsel-yank-pop)
-	  ("M-x" . counsel-M-x)
-	  ("C-x C-f" . counsel-find-file)
-	  ("<f1> f" . counsel-describe-function)
-	  ("<f1> v" . counsel-describe-variable)
-	  ("<f1> l" . counsel-find-library)
-	  ("<f2> i" . counsel-info-lookup-symbol)
-	  ("<f2> u" . counsel-unicode-char)
-	  ;; ("C-c g" . counsel-git)
-	  ("C-c j" . counsel-git-grep)
-	  ;; ("C-c k" . counsel-ag)
-	  ("C-x l" . counsel-locate)
-	  ("C-S-o" . counsel-rhythmbox)
-
-	  :map read-expression-map
-	  ("C-r" . counsel-expression-history)
-	  ("C-r" . counsel-minibuffer-history)
-	  )
-
-    :init
-    (setq counsel-grep-base-command "grep -niE %s %s")
-    (setq counsel-grep-base-command
-	  "rg -i -M 120 --no-heading --line-number --color never %s %s")
-    (setq counsel-rg-base-command
-	  "rg -i -M 120 --no-heading --line-number --color never %s .")
-
-    (setq counsel-git-grep-cmd-default
-	  (concat "git --no-pager grep --full-name -n --no-color -i -e '%s' -- './*' "
-		  (mapconcat (lambda (x) (format "':!*.%s'" x))
-			     '("htm" "so" "a" "TTC" "NDS" "png" "md5") " ")))
-    (setq counsel-fzf-dir-function
-	  (lambda ()
-	    (let ((d (locate-dominating-file default-directory ".git")))
-	      (if (or (null d)
-		      (equal (expand-file-name d)
-			     (expand-file-name "~/")))
-		  default-directory
-		d))))
-
-    (setq counsel-linux-apps-directories
-	  '("/usr/share/applications/"
-	    ))
-
-    :config
-    (ivy-set-display-transformer 'counsel-describe-function nil)
-    )
-  #+END_SRC
-* magit
-  #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t
-    :bind
-    ("C-x g" . magit-status)
-    :init
-    :config
-    (global-magit-file-mode)
-    )
-  #+END_SRC
-* smartrep
-  #+BEGIN_SRC emacs-lisp
-
- ;; Setting new prefix key for multiple cursors
-
- (define-prefix-command 'mc)
- (global-set-key (kbd"C-.") 'mc)
-
-
- (use-package smartrep
-   :ensure t
-   :config
-   (smartrep-define-key
-    global-map "C-."
-    '(
-
-      ;; Multiple cursors
-
-      ("h" . mc/skip-to-previous-like-this)
-      ("j" . mc/mark-previous-like-this)
-      ("k" . mc/mark-next-like-this)
-      ("l" . mc/skip-to-next-like-this)
-
-      ("u" . mc/unmark-previous-like-this)
-      ("i" . mc/unmark-next-like-this)
-
-      ("b" . mc/insert-letters)
-      ("n" . mc/insert-numbers)
-
-      ("m" . mc/mark-all-like-this)
-      ("e" . mc/edit-lines)
-
-      ("o" . mc/mark-pop )
-      ("a" . mc/vertical-align )
-
-      ("y" . er/expand-region )
-      ))
-   )
-
-  #+END_SRC
-
-* mc
-  #+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-    :ensure t
-    :config
-    ;; (global-set-key (kbd "C-.")  'mc/mark-next-like-this)
-    ;; (global-set-key (kbd "C-,")  'mc/mark-previous-like-this)
-    ;; (global-set-key (kbd "C-:")  'mc/mark-all-like-this)
-    ;; ;; (global-set-key (kbd "M-<down>")  'mc/mark-next-word-like-this)
-    ;; (global-set-key (kbd "C->")  'mc/skip-to-next-like-this)
-    ;; (global-set-key (kbd "C-<")  'mc/skip-to-previous-like-this)
-    ;; (global-set-key (kbd "C-x C-.")  'mc/unmark-next-like-this)
-    ;; (global-set-key (kbd "C-x C-,")  'mc/unmark-previous-like-this)
-    ;; (global-set-key (kbd "C-x C-:")  'mc/mark-pop)
-    ;; (global-set-key (kbd "M-[")  'mc/insert-numbers)
-    ;; (global-set-key (kbd "M-]")  'mc/insert-letters)
-    ;; ;; (global-set-key (kbd "C-c a")  'mc/vertical-align)
-
-    )
-
-    (use-package expand-region
-    :ensure t
-    )
-
-
-  #+END_SRC
-* neotree
-  #+BEGIN_SRC emacs-lisp
-  (use-package neotree
-    :ensure t
-    :bind
-    ("C-`" . neotree-toggle)
-
-    :config
-    (setq neo-smart-open t)
-    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-    )
-  #+END_SRC
-* org
-  #+BEGIN_SRC emacs-lisp
-  (use-package org
-    :ensure t
-    :init
-    :config
-    (setq org-agenda-files (list "~/Documents/School/agenda.org")))
-
-  (use-package org-bullets
-    :ensure t
-    :config
-
-    (setq org-bullets-face-name (quote org-bullet-face))
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-    (setq org-bullets-bullet-list '("◉" "•" "●" "▶" "►" "▸"))
-    )
-
-  (define-key org-mode-map (kbd "C-c C-a") 'org-agenda)
-  (define-key org-mode-map (kbd "C-c h") 'counsel-org-goto-all)
-  #+END_SRC
-* whichkey
-  #+BEGIN_SRC emacs-lisp
-;; Shows possible suffix keys
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode)
-  )
-  #+END_SRC
-* openwith
-  #+BEGIN_SRC emacs-lisp
-  (use-package openwith
-    :ensure t
-    :config
-    (when (require 'openwith nil 'noerror)
-      (setq openwith-associations
-	    (list
-	     (list (openwith-make-extension-regexp
-		    '("mp4" "mkv"))
-		   "mpv"
-		   '(file))
-	     (list (openwith-make-extension-regexp
-		    '("mp3"))
-		   "alacritty -e cmus"
-		   '(file))
-	     (list (openwith-make-extension-regexp
-		    '("doc" "xls" "ppt" "odt" "ods" "odg" "odp"))
-		   "libreoffice"
-		   '(file))
-	     (list (openwith-make-extension-regexp
-		    '("pdf" "ps" "ps.gz" "dvi"))
-		   "zathura"
-		   '(file))
-
-	     (list (openwith-make-extension-regexp
-		    '("docx"))
-		   "libreoffice"
-		   '(file))
-
-	     (list (openwith-make-extension-regexp
-		    '("xopp"))
-		   "xournalpp"
-		   '(file))
-
-	     (list (openwith-make-extension-regexp
-		    '("vcd"))
-		   "gtkwave"
-		   '(file))
-	     ))
-      (openwith-mode 1))
-    )
-  (setq large-file-warning-threshold nil)
-  #+END_SRC
-* yasnippet
-  #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :config
-    (yas-global-mode 1)
-    )
-  (use-package yasnippet-snippets
-    :ensure t
-    )
-  #+END_SRC
-
-* all the icons
-  #+BEGIN_SRC emacs-lisp
-    (use-package all-the-icons
-      :ensure t)
-
-    (use-package all-the-icons-dired
-      :ensure t
-      :config
-      (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
-
-    (use-package all-the-icons-ivy
-      :ensure t
-      :config
-      (all-the-icons-ivy-setup))
-
-  #+END_SRC
+   #+END_SRC
+** html/css
+   #+BEGIN_SRC emacs-lisp
+   (use-package emmet-mode
+     :ensure t
+     :config
+     (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+     (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+     (add-hook 'html-mode-hook 'emmet-mode)
+     )
+
+   (use-package web-mode
+     :ensure t
+     :config
+     (add-hook 'html-mode-hook 'web-mode))
+   #+END_SRC
+** latex
+   #+BEGIN_SRC emacs-lisp
+   (use-package tex
+         :ensure auctex
+         :config
+         (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
+         (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+         (setq LaTeX-item-indent 0)
+         (add-hook 'LaTeX-mode-hook
+                           (lambda ()
+                                 (add-hook 'after-save-hook 'recompile nil 'make-it-local))))
+   #+END_SRC

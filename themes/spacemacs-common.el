@@ -48,7 +48,7 @@
   :type 'boolean
   :group 'spacemacs-theme)
 
-(defcustom spacemacs-theme-keyword-italic nil
+(defcustom spacemacs-theme-keyword-italic t
   "Enable italics for keywords."
   :type 'boolean
   :group 'spacemacs-theme)
@@ -101,28 +101,28 @@ to 'auto, tags may not be properly aligned. "
   (let ((class '((class color) (min-colors 89))) ;;              ~~ Dark ~~                              ~~ Light ~~
         ;;                                                          GUI       TER                           GUI       TER
         ;; generic
-        (act1          (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
-        (act2          (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
+        (act1          (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
+        (act2          (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
         (base          (if (eq variant 'dark) (if (true-color-p) "#ffffff" "#ffffff") (if (true-color-p) "#655370" "#655370")))
         (base-dim      (if (eq variant 'dark) (if (true-color-p) "#686868" "#686868") (if (true-color-p) "#a094a2" "#a094a2")))
-        (bg1           (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
-        (bg2           (if (eq variant 'dark) (if (true-color-p) "#444444" "#444444") (if (true-color-p) "#efeae9" "#efeae9")))
-        (bg3           (if (eq variant 'dark) (if (true-color-p) "#444444" "#444444") (if (true-color-p) "#e3dedd" "#e3dedd")))
-        (bg4           (if (eq variant 'dark) (if (true-color-p) "#444444" "#444444") (if (true-color-p) "#d2ceda" "#d2ceda")))
-        (border        (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
+        (bg1           (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
+        (bg2           (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#efeae9" "#efeae9")))
+        (bg3           (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e3dedd" "#e3dedd")))
+        (bg4           (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#d2ceda" "#d2ceda")))
+        (border        (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
         (cblk          (if (eq variant 'dark) (if (true-color-p) "#cbc1d5" "#cbc1d5") (if (true-color-p) "#655370" "#655370")))
-        (cblk-bg       (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
+        (cblk-bg       (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
         (cblk-ln       (if (eq variant 'dark) (if (true-color-p) "#334444" "#334444") (if (true-color-p) "#9380b2" "#9380b2")))
-        (cblk-ln-bg    (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#ddd8eb" "#ddd8eb")))
+        (cblk-ln-bg    (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#ddd8eb" "#ddd8eb")))
         (cursor        (if (eq variant 'dark) (if (true-color-p) "#e3dedd" "#e3dedd") (if (true-color-p) "#100a14" "#100a14")))
-        (const         (if (eq variant 'dark) (if (true-color-p) "#a45bad" "#a45bad") (if (true-color-p) "#4e3163" "#4e3163")))
+        (const         (if (eq variant 'dark) (if (true-color-p) "#3EDAD4" "#3EDAD4") (if (true-color-p) "#4e3163" "#4e3163")))
         (comment       (if (eq variant 'dark) (if (true-color-p) "#555555" "#555555") (if (true-color-p) "#2aa1ae" "#2aa1ae")))
         (comment-light (if (eq variant 'dark) (if (true-color-p) "#555555" "#555555") (if (true-color-p) "#a49da5" "#a49da5")))
-        (comment-bg    (if (eq variant 'dark) (if (true-color-p) "#0c0c0c" "#0c0c0c") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
+        (comment-bg    (if (eq variant 'dark) (if (true-color-p) "#000000" "#000000") (if (true-color-p) "#e7e5eb" "#e7e5eb")))
         (comp          (if (eq variant 'dark) (if (true-color-p) "#c56ec3" "#c56ec3") (if (true-color-p) "#6c4173" "#6c4173")))
         (err           (if (eq variant 'dark) (if (true-color-p) "#e0211d" "#e0211d") (if (true-color-p) "#e0211d" "#e0211d")))
-        (func          (if (eq variant 'dark) (if (true-color-p) "#70FF98" "#70FF98") (if (true-color-p) "#6c3163" "#6c3163")))
-        (head1         (if (eq variant 'dark) (if (true-color-p) "#4f97d7" "#4f97d7") (if (true-color-p) "#3a81c3" "#3a81c3")))
+        (func          (if (eq variant 'dark) (if (true-color-p) "#F94FA0" "#F94FA0") (if (true-color-p) "#6c3163" "#6c3163")))
+        (head1         (if (eq variant 'dark) (if (true-color-p) "#44DDDD" "#44DDDD") (if (true-color-p) "#3a81c3" "#3a81c3")))
         (head1-bg      (if (eq variant 'dark) (if (true-color-p) "#293239" "#293239") (if (true-color-p) "#edf1ed" "#edf1ed")))
         (head2         (if (eq variant 'dark) (if (true-color-p) "#2d9574" "#2d9574") (if (true-color-p) "#2d9574" "#2d9574")))
         (head2-bg      (if (eq variant 'dark) (if (true-color-p) "#293235" "#293235") (if (true-color-p) "#edf2e9" "#edf2e9")))
@@ -130,19 +130,19 @@ to 'auto, tags may not be properly aligned. "
         (head3-bg      (if (eq variant 'dark) (if (true-color-p) "#293235" "#293235") (if (true-color-p) "#edf2e9" "#edf2e9")))
         (head4         (if (eq variant 'dark) (if (true-color-p) "#b1951d" "#b1951d") (if (true-color-p) "#b1951d" "#b1951d")))
         (head4-bg      (if (eq variant 'dark) (if (true-color-p) "#32322c" "#32322c") (if (true-color-p) "#f6f1e1" "#f6f1e1")))
-        (highlight     (if (eq variant 'dark) (if (true-color-p) "#444155" "#444155") (if (true-color-p) "#d3d3e7" "#d3d3e7")))
-        (highlight-dim (if (eq variant 'dark) (if (true-color-p) "#3b314d" "#3b314d") (if (true-color-p) "#e7e7fc" "#e7e7fc")))
-        (keyword       (if (eq variant 'dark) (if (true-color-p) "#FF9EFF" "#FF9EFF") (if (true-color-p) "#3a81c3" "#3a81c3")))
+        (highlight     (if (eq variant 'dark) (if (true-color-p) "#20273d" "#20373d") (if (true-color-p) "#d3d3e7" "#d3d3e7")))
+        (highlight-dim (if (eq variant 'dark) (if (true-color-p) "#40212d" "#40212d") (if (true-color-p) "#e7e7fc" "#e7e7fc")))
+        (keyword       (if (eq variant 'dark) (if (true-color-p) "#742FD1" "#742FD1") (if (true-color-p) "#3a81c3" "#3a81c3")))
         (lnum          (if (eq variant 'dark) (if (true-color-p) "#44505c" "#44505c") (if (true-color-p) "#a8a8bf" "#a8a8bf")))
         (mat           (if (eq variant 'dark) (if (true-color-p) "#86dc2f" "#86dc2f") (if (true-color-p) "#ba2f59" "#ba2f59")))
         (meta          (if (eq variant 'dark) (if (true-color-p) "#9f8766" "#9f8766") (if (true-color-p) "#da8b55" "#da8b55")))
-        (str           (if (eq variant 'dark) (if (true-color-p) "#D9F060" "#D9F060") (if (true-color-p) "#2d9574" "#2d9574")))
+        (str           (if (eq variant 'dark) (if (true-color-p) "#FFB5D8" "#FFB5D8") (if (true-color-p) "#2d9574" "#2d9574")))
         (suc           (if (eq variant 'dark) (if (true-color-p) "#86dc2f" "#86dc2f") (if (true-color-p) "#42ae2c" "#42ae2c")))
         (ttip          (if (eq variant 'dark) (if (true-color-p) "#9a9aba" "#9a9aba") (if (true-color-p) "#8c799f" "#8c799f")))
         (ttip-sl       (if (eq variant 'dark) (if (true-color-p) "#5e5079" "#5e5079") (if (true-color-p) "#c8c6dd" "#c8c6dd")))
         (ttip-bg       (if (eq variant 'dark) (if (true-color-p) "#121212" "#121212") (if (true-color-p) "#e2e0ea" "#e2e0ea")))
-        (type          (if (eq variant 'dark) (if (true-color-p) "#B353FC" "#B353FC") (if (true-color-p) "#ba2f59" "#ba2f59")))
-        (var           (if (eq variant 'dark) (if (true-color-p) "#8AE5FF" "#8AE5FF") (if (true-color-p) "#715ab1" "#715ab1")))
+        (type          (if (eq variant 'dark) (if (true-color-p) "#DD0B53" "#DD0B53") (if (true-color-p) "#ba2f59" "#ba2f59")))
+        (var           (if (eq variant 'dark) (if (true-color-p) "#FEDA98" "#FEDA98") (if (true-color-p) "#715ab1" "#715ab1")))
         (war           (if (eq variant 'dark) (if (true-color-p) "#dc752f" "#dc752f") (if (true-color-p) "#dc752f" "#dc752f")))
 
         ;; colors
@@ -153,7 +153,8 @@ to 'auto, tags may not be properly aligned. "
         (grey          (if (eq variant 'dark) (if (true-color-p) "#555555" "#555555") (if (true-color-p) "#999999" "#999999")))
         (green-bg      (if (eq variant 'dark) (if (true-color-p) "#293235" "#262626") (if (true-color-p) "#edf2e9" "#ffffff")))
         (green-bg-s    (if (eq variant 'dark) (if (true-color-p) "#29422d" "#262626") (if (true-color-p) "#dae6d0" "#ffffff")))
-        (cyan          (if (eq variant 'dark) (if (true-color-p) "#28def0" "#00ffff") (if (true-color-p) "#21b8c7" "#008080")))
+        (cyan          (if (eq variant 'dark) (if (true-color-p) "#00ffff" "#00ffff") (if (true-color-p) "#21b8c7" "#008080")))
+        (purp          (if (eq variant 'dark) (if (true-color-p) "#FF5B89" "#FF5B89") (if (true-color-p) "#21b8c7" "#008080")))
         (red           (if (eq variant 'dark) (if (true-color-p) "#f2241f" "#d70000") (if (true-color-p) "#f2241f" "#d70008")))
         (red-bg        (if (eq variant 'dark) (if (true-color-p) "#3c2a2c" "#262626") (if (true-color-p) "#faede4" "#ffffff")))
         (red-bg-s      (if (eq variant 'dark) (if (true-color-p) "#512e31" "#262626") (if (true-color-p) "#eed9d2" "#ffffff")))
@@ -162,7 +163,8 @@ to 'auto, tags may not be properly aligned. "
         (blue-bg-s     (if (eq variant 'dark) (if (true-color-p) "#2d4252" "#262626") (if (true-color-p) "#d1dcdf" "#d7d7ff")))
         (magenta       (if (eq variant 'dark) (if (true-color-p) "#a31db1" "#af00df") (if (true-color-p) "#a31db1" "#800080")))
         (yellow        (if (eq variant 'dark) (if (true-color-p) "#b1951d" "#875f00") (if (true-color-p) "#b1951d" "#875f00")))
-        (yellow-bg     (if (eq variant 'dark) (if (true-color-p) "#32322c" "#262626") (if (true-color-p) "#f6f1e1" "#ffffff"))))
+        (yellow1       (if (eq variant 'dark) (if (true-color-p) "#DCEB2F" "#DCEB2F") (if (true-color-p) "#b1951d" "#875f00")))
+                (yellow-bg     (if (eq variant 'dark) (if (true-color-p) "#32322c" "#262626") (if (true-color-p) "#f6f1e1" "#ffffff"))))
 
     (cl-loop for (cvar . val) in spacemacs-theme-custom-colors
              do (set cvar val))
@@ -178,13 +180,13 @@ to 'auto, tags may not be properly aligned. "
      `(error ((,class (:foreground ,err))))
      `(eval-sexp-fu-flash ((,class (:background ,suc :foreground ,bg1))))
      `(eval-sexp-fu-flash-error ((,class (:background ,err :foreground ,bg1))))
-     `(font-lock-builtin-face ((,class (:foreground ,keyword))))
+     `(font-lock-builtin-face ((,class (:foreground ,"#9a99e7"))))
      `(font-lock-comment-face ((,class (:foreground ,(if spacemacs-theme-comment-italic comment-light comment) :background ,(when spacemacs-theme-comment-bg comment-bg) :slant ,(if spacemacs-theme-comment-italic 'italic 'normal)))))
      `(font-lock-constant-face ((,class (:foreground ,const))))
      `(font-lock-doc-face ((,class (:foreground ,meta))))
      `(font-lock-function-name-face ((,class (:foreground ,func :inherit bold))))
      `(font-lock-keyword-face ((,class (:inherit bold :foreground ,keyword :slant ,(if spacemacs-theme-keyword-italic 'italic 'normal)))))
-     `(font-lock-negation-char-face ((,class (:foreground ,const))))
+     `(font-lock-negation-char-face ((,class (:foreground ,"#0f0"))))
      `(font-lock-preprocessor-face ((,class (:foreground ,func))))
      `(font-lock-reference-face ((,class (:foreground ,const))))
      `(font-lock-string-face ((,class (:foreground ,str))))
@@ -197,12 +199,12 @@ to 'auto, tags may not be properly aligned. "
      `(hl-line ((,class (:background ,hline))))
      `(isearch ((,class (:foreground ,bg1 :background ,mat))))
      `(lazy-highlight ((,class (:background ,green-bg-s :weight normal))))
-     `(link ((,class (:foreground ,comment :underline t))))
+     `(link ((,class (:foreground ,str :bold t))))
      `(link-visited ((,class (:foreground ,comp :underline t))))
      `(match ((,class (:background ,highlight :foreground ,mat))))
      `(minibuffer-prompt ((,class (:inherit bold :foreground ,keyword))))
      `(page-break-lines ((,class (:foreground ,act2))))
-     `(region ((,class (:background ,highlight))))
+     `(region ((,class (:background ,highlight-dim))))
      `(secondary-selection ((,class (:background ,bg3))))
      `(shadow ((,class (:foreground ,base-dim))))
      `(success ((,class (:foreground ,suc))))
@@ -250,13 +252,14 @@ to 'auto, tags may not be properly aligned. "
      `(cfw:face-toolbar-button-on   ((,class (:foreground ,base :weight bold))))
 
 ;;;;; centaur-tabs
+     `(tab-line ((,class (:background ,bg1 :foreground ,bg1))))
      `(centaur-tabs-default ((,class (:background ,bg1 :foreground ,bg1))))
      `(centaur-tabs-selected ((,class (:background ,bg1 :foreground ,base :weight bold))))
-     `(centaur-tabs-unselected ((,class (:background ,bg2 :foreground ,base-dim :weight light))))
+     `(centaur-tabs-unselected ((,class (:background ,bg1 :foreground ,grey))))
      `(centaur-tabs-selected-modified ((,class (:background ,bg1
-							    :foreground ,blue :weight bold))))
+                                                            :foreground ,blue :weight bold))))
      `(centaur-tabs-unselected-modified ((,class (:background ,bg2 :weight light
-							      :foreground ,blue))))
+                                                              :foreground ,blue))))
      `(centaur-tabs-active-bar-face ((,class (:background ,keyword))))
      `(centaur-tabs-modified-marker-selected ((,class (:inherit 'centaur-tabs-selected :foreground,keyword))))
      `(centaur-tabs-modified-marker-unselected ((,class (:inherit 'centaur-tabs-unselected :foreground,keyword))))
@@ -277,7 +280,7 @@ to 'auto, tags may not be properly aligned. "
      `(company-preview-common ((,class (:background ,ttip-bg :foreground ,base))))
      `(company-preview-search ((,class (:inherit match))))
      `(company-scrollbar-bg ((,class (:background ,bg2))))
-     `(company-scrollbar-fg ((,class (:background ,act2))))
+     `(company-scrollbar-fg ((,class (:background ,hline))))
      `(company-template-field ((,class (:inherit region))))
      `(company-tooltip ((,class (:background ,ttip-bg :foreground ,ttip))))
      `(company-tooltip-annotation ((,class (:foreground ,type))))
@@ -535,7 +538,7 @@ to 'auto, tags may not be properly aligned. "
      `(helm-match-item ((,class (:background ,head1-bg :foreground ,head1))))
      `(helm-moccur-buffer ((,class (:foreground ,var :background ,bg1))))
      `(helm-selection ((,class (:background ,highlight))))
-     `(helm-selection-line ((,class (:background ,bg2))))
+     `(helm-selection-line ((,class (:background ,highlight))))
      `(helm-separator ((,class (:foreground ,comp :background ,bg1))))
      `(helm-source-header ((,class (:background ,comp :foreground ,bg1 :inherit bold))))
      `(helm-time-zone-current ((,class (:foreground ,keyword :background ,bg1))))
@@ -586,11 +589,14 @@ to 'auto, tags may not be properly aligned. "
      `(ivy-minibuffer-match-face-3 ((,class (:foreground ,head4 :underline t))))
      `(ivy-minibuffer-match-face-4 ((,class (:foreground ,head3 :underline t))))
      `(ivy-virtual ((,class (:foreground ,grey))))
+     `(ivy-subdir ((,class (:foreground ,keyword))))
+     `(ivy-grep-info ((,class (:foreground ,purp))))
      `(ivy-remote ((,class (:foreground ,cyan))))
 
 ;;;;; latex
      `(font-latex-bold-face ((,class (:foreground ,comp))))
      `(font-latex-italic-face ((,class (:foreground ,keyword :italic t))))
+     `(font-latex-sedate-face ((,class (:inherit bold :foreground ,keyword :slant ,(if spacemacs-theme-keyword-italic 'italic 'normal)))))
      `(font-latex-match-reference-keywords ((,class (:foreground ,const))))
      `(font-latex-match-variable-keywords ((,class (:foreground ,var))))
      `(font-latex-sectioning-0-face ((,class (:inherit bold :foreground ,head3 :height ,(if spacemacs-theme-org-height 1.3 1.0) :background ,(when spacemacs-theme-org-highlight head3-bg)))))
@@ -679,6 +685,7 @@ to 'auto, tags may not be properly aligned. "
 ;;;;; mode-line
      `(mode-line           ((,class (:foreground ,base :background ,act1 :box (:color ,border :line-width 1)))))
      `(mode-line-buffer-id ((,class (:inherit bold :foreground ,func))))
+     `(mode-line-buffer-id-inactive ((,class (:inherit bold :foreground ,comment))))
      `(mode-line-inactive  ((,class (:foreground ,base :background ,bg1  :box (:color ,border :line-width 1)))))
 
 ;;;;; mu4e
@@ -798,10 +805,18 @@ to 'auto, tags may not be properly aligned. "
      `(popup-tip-face ((,class (:background ,ttip-sl :foreground ,base :bold nil :italic nil :underline nil))))
 
 ;;;;; powerline
-     `(powerline-active1 ((,class (:background ,act2 :foreground ,base))))
-     `(powerline-active2 ((,class (:background ,act2 :foreground ,base))))
-     `(powerline-inactive1 ((,class (:background ,bg2 :foreground ,base))))
-     `(powerline-inactive2 ((,class (:background ,bg2 :foreground ,base))))
+     `(powerline-active0 ((,class (:background ,bg1 :foreground ,base))))
+     `(powerline-active1 ((,class (:background ,"#83BF9D" :foreground ,bg1))))
+     `(powerline-active2 ((,class (:background ,bg1 :foreground ,war))))
+     `(powerline-active3 ((,class (:background ,bg1 :foreground ,yellow1))))
+     `(powerline-active4 ((,class (:background ,var :foreground ,bg1))))
+     `(powerline-active5 ((,class (:background ,bg1 :foreground ,base))))
+     `(powerline-inactive0 ((,class (:background ,bg1 :foreground ,comment))))
+     `(powerline-inactive1 ((,class (:background ,bg1 :foreground ,comment))))
+     `(powerline-inactive2 ((,class (:background ,bg1 :foreground ,comment))))
+     `(powerline-inactive3 ((,class (:background ,bg1 :foreground ,comment))))
+     `(powerline-inactive4 ((,class (:background ,bg1 :foreground ,comment))))
+     `(powerline-inactive5 ((,class (:background ,bg1 :foreground ,comment))))
 
 ;;;;; rainbow-delimiters
      `(rainbow-delimiters-depth-1-face ((,class :foreground ,keyword)))
@@ -888,6 +903,21 @@ to 'auto, tags may not be properly aligned. "
      `(term-color-red ((,class (:foreground ,red))))
      `(term-color-white ((,class (:foreground ,base))))
      `(term-color-yellow ((,class (:foreground ,yellow))))
+
+
+;;;;; vterm
+     `(vterm-color-default ((,class (:foreground ,base :background ,bg1))))
+     ;; vterm-color-black used to render black color code.
+     ;; The foreground color is used as ANSI color 0 and the background
+     ;; color is used as ANSI color 8.
+     `(vterm-color-black ((,class (:foreground ,comment :background ,comment))))
+     `(vterm-color-blue ((,class (:foreground ,purp :background ,purp))))
+     `(vterm-color-cyan ((,class (:foreground ,cyan :background ,cyan))))
+     `(vterm-color-green ((,class (:foreground ,func :background ,func))))
+     `(vterm-color-magenta ((,class (:foreground ,magenta :background ,magenta))))
+     `(vterm-color-red ((,class (:foreground ,red  :background ,red))))
+     `(vterm-color-white ((,class (:foreground ,magenta  :background ,cyan))))
+     `(vterm-color-yellow ((,class (:foreground ,yellow   :background ,yellow))))
 
 ;;;;; tide
      `(tide-hl-identifier-face ((,class (:foreground ,yellow :background ,yellow-bg))))
