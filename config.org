@@ -621,11 +621,7 @@
      (global-set-key (kbd "M-[")  'mc/insert-numbers)
      (global-set-key (kbd "M-]")  'mc/insert-letters)
      (global-set-key (kbd "C-c a")  'mc/vertical-align)
-~     (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-     
-
-
-     )
+     (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click))
    #+END_SRC
 ** helm
    #+BEGIN_SRC emacs-lisp
